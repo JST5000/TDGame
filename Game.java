@@ -142,7 +142,10 @@ public class Game extends BasicGame{
 			}
 		//make the game screen
 		if(currScreen == 1){
-			
+			g.setColor(new Color(.5f, .5f, .5f));
+			g.fillRect(0,0,gc.getWidth(),gc.getHeight());
+			Grid gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
+			gameGrid.render(g);
 		}
 	}
 	
@@ -150,7 +153,7 @@ public class Game extends BasicGame{
 		try{
 			Game TD = new Game("Tower Defense");
 			AppGameContainer window = new AppGameContainer(TD);
-			window.setDisplayMode(1000, 1000, false);
+			window.setDisplayMode(800, 800, false);
 			window.start();
 			TD.init(window);
 			
