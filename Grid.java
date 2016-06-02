@@ -1,6 +1,6 @@
-package grid;
-
-import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Color;
 
 //This makes a grid for laying out other objects. It is used for in game management
 //of space. It allows for the organization of turrets and enemy locations for range.
@@ -21,7 +21,7 @@ public class Grid {
 	private int idCount;
 	
 	//makes a grid of boolean values with length r and height r along with a raw size of s at location l.
-	Grid(Vector2f s, Vector2f l, int r) {
+	Grid(Vector2f l, Vector2f s, int r) {
 		size = s;
 		location = l;
 		gr = new int[r][r];
@@ -29,7 +29,7 @@ public class Grid {
 	}
 	
 	//makes a grid of boolean values with length r and height c along with a raw size of s at location l.
-	public Grid(Vector2f s, Vector2f l, int r, int c){
+	public Grid(Vector2f l, Vector2f s, int r, int c){
 		size = s;
 		location = l;
 		gr = new int[r][c];
@@ -45,6 +45,7 @@ public class Grid {
 	public int get(int r, int c) {
 		return gr[r][c];
 	}
+	
 	//Returns the grid
 	public int[][] getGrid() {
 		return gr;
@@ -62,6 +63,17 @@ public class Grid {
 	
 	public int getId() {
 		return idCount;
+	}
+	
+	public void render(Graphics g) {
+		g.setColor(new Color(0f, 0f, 0f));
+		for(int i = 0; i<gr.length+1; i++) {
+			g.drawLine((int)(location.x+size.x/gr.length*i), (int)location.y, (int)(location.x+size.x/gr.length*i), (int)(location.y+size.y));
+		}
+		
+		for(int i = 0; i<gr[0].length + 1; i++) {
+			g.drawLine((int)(location.x), (int)(location.y+size.y/gr[0].length*i), (int) (location.x + size.x), (int)(location.y+size.y/gr[0].length*i)); 
+		}
 	}
 	
 }
