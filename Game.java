@@ -43,7 +43,17 @@ public class Game extends BasicGame{
 		gc.setTargetFrameRate(60);
 		gc.setShowFPS(false);
 		
+		//gets mouse input
+		Input input=gc.getInput();
+		int mouseX=input.getMouseX();
+		int mouseY=input.getMouseY();
+		//updates coordinates when left click
+		if(input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
+			mouseX=input.getMouseX();
+			mouseY=input.getMouseY();
+		}
 		
+	
 		
 		try {
 			
