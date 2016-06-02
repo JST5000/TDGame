@@ -33,6 +33,10 @@ public class Game extends BasicGame{
 	
 	Texture t1;
 	
+	int mouseX;
+	
+	int mouseY;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
@@ -72,6 +76,16 @@ public class Game extends BasicGame{
 		if(totalTime/200>1000) {
 			gc.exit();
 		}
+		//gets input
+		Input input=gc.getInput();
+		mouseX=input.getMouseX();
+		mouseY=input.getMouseY();
+		//records location of mouse when mouse is clicked
+		if(input.isMouseClicked(input.MOUSE_LEFT_BUTTON)){
+			mouseX=input.getMouseX();
+			mouseY=input.getMouseY();
+		}
+		
 	}
 	
 	public int getStrWidth(String s, GameContainer gc) {
@@ -120,6 +134,15 @@ public class Game extends BasicGame{
 			g.scale(logo.getSize().x/logo.getDesign().getWidth(), logo.getSize().y/logo.getDesign().getHeight());
 			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()/2, gc.getHeight()/8);
 			g.resetTransform();
+		}
+		//should check if mouse is located in the rectangle ( but IDK man)and if so, change the screen
+		if( (mouseX >= centerX-gc.getWidth()/10) &&  (mouseX =< (centerX-gc.getWidth()/10)+gc.getWidth()/5) && (mouseY >= 
+			centerY+gc.getHeight()/12) && (mouseY <= (centerY+gc.getHeight()/12)+h)){
+				currScreen=1;
+			}
+		//make the game screen
+		if(currScreen == 1){
+			
 		}
 	}
 	
