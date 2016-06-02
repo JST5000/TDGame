@@ -33,6 +33,11 @@ public class Game extends BasicGame{
 	
 	Texture t1;
 	
+	//so we can use them in both the update and render methods
+	int mouseX;
+	
+	int mouseY;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
@@ -42,8 +47,7 @@ public class Game extends BasicGame{
 		//This limits the computer processing power cost
 		gc.setTargetFrameRate(60);
 		gc.setShowFPS(false);
-		
-		
+	
 		
 		try {
 			
@@ -72,6 +76,19 @@ public class Game extends BasicGame{
 		if(totalTime/200>1000) {
 			gc.exit();
 		}
+		
+		//gets mouse input
+		Input input=gc.getInput();
+		mouseX=input.getMouseX();
+		mouseY=input.getMouseY();
+		
+		//updates coordinates when left click
+		if(input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
+			mouseX=input.getMouseX();
+			mouseY=input.getMouseY();
+		}
+		
+		
 	}
 	
 	public int getStrWidth(String s, GameContainer gc) {
@@ -120,6 +137,18 @@ public class Game extends BasicGame{
 			g.scale(logo.getSize().x/logo.getDesign().getWidth(), logo.getSize().y/logo.getDesign().getHeight());
 			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()/2, gc.getHeight()/8);
 			g.resetTransform();
+		
+		}
+		//should check if the mouse has been clicked in the play game rectanble but IDK man
+		if( (mouseX >= centerX-gc.getWidth()/10) &&  (mouseX =< (centerX-gc.getWidth()/10)+gc.getWidth()/5) && (mouseY >= 
+			centerY+gc.getHeight()/12) && (mouseY <= (centerY+gc.getHeight()/12)+h)){
+				currScreen=1;
+			}
+		//game=1
+		if( currScreen == 1) {
+			//create a new background;pretty much just copying the above
+			
+			
 		}
 	}
 	
