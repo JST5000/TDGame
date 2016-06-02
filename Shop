@@ -29,11 +29,15 @@ public class Shop {
 	  shop=new Icon [4][3];
 	  }
 	//manually add all the turrets to the shop?  
+	
 	//there shouldn't have to be any changes that take place in the shop
 	
 	public void render(Graphics g) {
 	  g.setColor(Color.black);
 	  //draw a rectangle based on dimensions, then overlay with icon images
+	  //this may be horribly wrong
+	  g.fillRect((int)location.x, (int) location.y, (int) size.x, (int) size.y);
+	  
 	  }
 	  
   }
