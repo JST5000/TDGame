@@ -37,6 +37,8 @@ public class Game extends BasicGame{
 	
 	int mouseY;
 	
+	int currScreen;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
@@ -46,6 +48,7 @@ public class Game extends BasicGame{
 		//This limits the computer processing power cost
 		gc.setTargetFrameRate(60);
 		gc.setShowFPS(false);
+		currScreen = 0;
 		
 		
 		
@@ -99,7 +102,6 @@ public class Game extends BasicGame{
 	public void render(GameContainer gc, org.newdawn.slick.Graphics g) throws SlickException{
 		int centerX = gc.getWidth()/2;
 		int centerY = gc.getHeight()/2;
-		int currScreen = 0;
 		
 		//This sets the font for the title page. setFont uses TrueTypeFont for some reason
 		Font font = new Font("Serif", Font.BOLD, 24);
