@@ -22,22 +22,17 @@ public class Shop {
   
   
   public Shop (Vector2f l, Vector2f s){
-		size = s;
-		location = l;
-	  //I assume the shop will be comprised of two basic turrets, then three colours, then the two additional 
-	  //upgrades per colour
-	  shop=new Icon [4][3];
-	  }
+	size = s;
+	location = l;
+	//I assume the shop will be comprised of two basic turrets, then three colours, then the two additional 
+	//upgrades per colour
+	shop=new Icon [4][4];//changed to acclimate grid
+ }
 	//manually add all the turrets to the shop?  
 	
-	//there shouldn't have to be any changes that take place in the shop
-	
-	public void render(Graphics g) {
-	  g.setColor(Color.black);
-	  //draw a rectangle based on dimensions, then overlay with icon images
-	  //this may be horribly wrong
-	  g.fillRect((int)location.x, (int) location.y, (int) size.x, (int) size.y);
-	  
-	  }
+public void render (Graphics g){
+	Grid shopGrid=new Grid (new Grid(location, size, 4, 15);//wasn't sure what to do about the id
+	shopGrid.render(g);
+
 	  
   }
