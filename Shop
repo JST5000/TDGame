@@ -1,0 +1,39 @@
+
+package playerObjects;
+
+import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.Texture;
+import.org.newdawn.slick.Color;
+
+//makes a shop with icons seperate from the grid to render during game
+//literally copying grid a little bit
+
+public class Shop {
+
+  //size of the shop in pixels
+  private Vector2f size;
+  
+  //location in relation to the page
+  private Vector2f location;
+  
+  //makes the actual buying thing
+  private Icon[][] store;
+  
+  
+  public Shop (Vector2f l, Vector2f s){
+		size = s;
+		location = l;
+	  //I assume the shop will be comprised of two basic turrets, then three colours, then the two additional 
+	  //upgrades per colour
+	  shop=new Icon [4][3];
+	  }
+	//manually add all the turrets to the shop?  
+	//there shouldn't have to be any changes that take place in the shop
+	
+	public void render(Graphics g) {
+	  g.setColor(Color.black);
+	  //draw a rectangle based on dimensions, then overlay with icon images
+	  }
+	  
+  }
