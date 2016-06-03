@@ -1,12 +1,11 @@
-
 package playerObjects;
 
-import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.opengl.Texture;
-import.org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 
-//makes a shop with icons seperate from the grid to render during game
+import grid.Grid;
+
+//makes a shop with icons separate from the grid to render during game
 //literally copying grid a little bit
 
 public class Shop {
@@ -25,14 +24,23 @@ public class Shop {
 	size = s;
 	location = l;
 	//I assume the shop will be comprised of two basic turrets, then three colours, then the two additional 
-	//upgrades per colour
-	shop=new Icon [4][4];//changed to acclimate grid
- }
-	//manually add all the turrets to the shop?  
+	//upgrades per color
+	store = new Icon [4][4];//changed to acclimate grid
+  } 
 	
-public void render (Graphics g){
-	Grid shopGrid=new Grid (new Grid(location, size, 4, 15);//wasn't sure what to do about the id
+  public void render (Graphics g){
+	Grid shopGrid = new Grid (location, size, store.length, store[0].length);
 	shopGrid.render(g);
-
-	  
+	for(int i = 0; i<store.length; i++) {
+		for(int j = 0; j<store[0].length; j++) {
+			//This prints out the icon image inside the grid boxes (Needs testing)
+			//TODO test this and refine
+			store[i][j].getDesign().draw(location.x+i*shopGrid.getSize().x/shopGrid.getGrid().length
+										, location.y+j*shopGrid.getSize().y/shopGrid.getGrid()[0].length
+										, size.x/store.length);
+		}
+	}
+	
   }
+	  
+ }
