@@ -21,7 +21,7 @@ public class Grid {
 	private int idCount;
 	
 	//makes a grid of boolean values with length r and height r along with a raw size of s at location l.
-	Grid(Vector2f l, Vector2f s, int r) {
+	public Grid(Vector2f l, Vector2f s, int r) {
 		size = s;
 		location = l;
 		gr = new int[r][r];
