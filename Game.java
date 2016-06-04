@@ -2,17 +2,21 @@ package main;
 
 import org.lwjgl.input.Mouse;
 
+import grid.*;
+
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Vector2f;
@@ -20,22 +24,23 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import playerObjects.Icon;
+import playerObjects.Shop;
 
 public class Game extends BasicGame{
 	
-	String name;
+	private String name;
 	
-	Icon playGame;
+	private Icon playGame;
 	
-	Icon logo;
+	private Icon logo;
 	
-	float totalTime;
+	private float totalTime;
 	
-	Texture t1;
+	private Texture t1;
 	
-	int mouseX;
+	private int mouseX;
 	
-	int mouseY;
+	private int mouseY;
 	
 	int currScreen;
 	
@@ -53,12 +58,8 @@ public class Game extends BasicGame{
 		
 		
 		try {
-			
-			
-			//TODO check into "psychiatrist home" because somehow the texture made it compile fine
-			Texture t1 = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/PlayButtonIcon.jpg")));
-			this.playGame = new Icon(new Image(t1), new Vector2f(100, 50));
-			
+			Texture t1 = TextureLoader.getTexture("jpg",  new FileInputStream(new File("./res/PlayButtonIcon.jpg")));
+			playGame = new Icon(new Image(t1), new Vector2f( 75, 100));
 			Texture tHardcoreLemon = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/hardcoreLemon.jpg")));
 			this.logo = new Icon(new Image(tHardcoreLemon), new Vector2f(400, 300));
 		}
@@ -74,20 +75,33 @@ public class Game extends BasicGame{
 	public void update(GameContainer gc, int milli) {
 		totalTime+=milli;
 		
-		//REMOVE THIS WHEN GAME IS CORRECTLY SET UP, ITS JUST A SHUT DOWN SWITCH IN CASE I FORGET
-		//REMOVE IT. THIS MEANS YOU FUTURE CODER. I WILL FIND YOU IF THIS IS NOT REMOVED.
-		if(totalTime/200>1000) {
-			gc.exit();
-		}
 		//gets input
 		Input input=gc.getInput();
-		mouseX=input.getMouseX();
-		mouseY=input.getMouseY();
 		//records location of mouse when mouse is clicked
-		if(input.isMouseClicked(input.MOUSE_LEFT_BUTTON)){
+		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			mouseX=input.getMouseX();
 			mouseY=input.getMouseY();
+			
+			//TODO make this work. This would parse what locations are relevant based upon screen such as
+			//for the main menu its just the PLAY button, but in game its the shop, turrets, etc.
+			//relevantLocations(mouseX, mouseY);
 		}
+		
+		//TODO All of the wave stuffs
+		/*if(waveIncoming) {
+			//This would return true 1 time before changing to false for each wave (init for waves)
+			if(wave.isStarting) {
+				for(Enemy e: waveEnemies) {
+					e.aStar(); //A* pathfinding
+					startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
+				}
+			}
+			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
+			for(Enemy e: waveEnemies) {
+				e.move(milli);
+				e.render();
+			}
+		} */
 		
 	}
 	
@@ -131,15 +145,14 @@ public class Game extends BasicGame{
 			String playGame = "PLAY GAME";
 			g.drawString(playGame, centerX-g.getFont().getWidth(playGame)/2, centerY+gc.getHeight()/12 + h/2-g.getFont().getLineHeight()/2);
 			g.drawRect(centerX-gc.getWidth()/10, centerY+gc.getHeight()/12, gc.getWidth()/5, h);
-			this.playGame.getDesign().draw(centerX-this.playGame.getSize().getX()/2, centerY+gc.getHeight()/6);
 			
 			g.scale(logo.getSize().x/logo.getDesign().getWidth(), logo.getSize().y/logo.getDesign().getHeight());
-			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()/2, gc.getHeight()/8);
+			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()*6/8, gc.getHeight()/18);
 			g.resetTransform();
 		}
 		//should check if mouse is located in the rectangle ( but IDK man)and if so, change the screen
-		if( (mouseX >= centerX-gc.getWidth()/10) &&  (mouseX =< (centerX-gc.getWidth()/10)+gc.getWidth()/5) && (mouseY >= 
-			centerY+gc.getHeight()/12) && (mouseY <= (centerY+gc.getHeight()/12)+h)){
+		if( (mouseX > centerX-gc.getWidth()/10) &&  (mouseX < (centerX-gc.getWidth()/10)+gc.getWidth()/5) && (mouseY >= 
+			centerY+gc.getHeight()/12) && (mouseY <= (centerY+gc.getHeight()/12)+50/*Keep the same as h above*/ && currScreen == 0)){
 				currScreen=1;
 			}
 		//make the game screen
@@ -148,6 +161,14 @@ public class Game extends BasicGame{
 			g.fillRect(0,0,gc.getWidth(),gc.getHeight());
 			Grid gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
 			gameGrid.render(g);
+			Shop turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
+			for(int i = 0; i<4; i++) {
+				for(int j = 0; j<4; j++) {
+					turretShop.addIcon(i, j, playGame);
+				}
+			}
+			//TODO FIX, THIS DOES NOT WORK
+			//turretShop.render(g);
 		}
 	}
 	
@@ -155,7 +176,7 @@ public class Game extends BasicGame{
 		try{
 			Game TD = new Game("Tower Defense");
 			AppGameContainer window = new AppGameContainer(TD);
-			window.setDisplayMode(800, 800, false);
+			window.setDisplayMode(1000, 800, false);
 			window.start();
 			TD.init(window);
 			
