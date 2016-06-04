@@ -27,6 +27,10 @@ public class Shop {
 	//upgrades per color
 	store = new Icon [4][4];//changed to acclimate grid
   } 
+  
+  public void addIcon(int r, int c, Icon i) {
+	  store[r][c] = i;
+  }
 	
   public void render (Graphics g){
 	Grid shopGrid = new Grid (location, size, store.length, store[0].length);
@@ -34,10 +38,12 @@ public class Shop {
 	for(int i = 0; i<store.length; i++) {
 		for(int j = 0; j<store[0].length; j++) {
 			//This prints out the icon image inside the grid boxes (Needs testing)
-			//TODO test this and refine
-			store[i][j].getDesign().draw(location.x+i*shopGrid.getSize().x/shopGrid.getGrid().length
-										, location.y+j*shopGrid.getSize().y/shopGrid.getGrid()[0].length
-										, size.x/store.length);
+			if(!store[i][j].getDesign().equals(null)) {
+				g.scale(store[i][j].getSize().x/store.length, store[i][j].getSize().y/store[i].length);
+				store[i][j].getDesign().draw(location.x+i*shopGrid.getSize().x/shopGrid.getGrid().length
+										, location.y+j*shopGrid.getSize().y/shopGrid.getGrid()[0].length);
+										
+			}
 		}
 	}
 	
