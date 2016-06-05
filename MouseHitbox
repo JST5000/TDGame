@@ -1,0 +1,30 @@
+package grid;
+
+import org.newdawn.slick.geom.Vector2f;
+
+public class MouseHitbox {
+	
+	//This is a list of the top left corners of hitboxes
+	private Vector2f hitBoxesTL;
+	
+	//This is a list of the Bottom Right corners of the hitboxes
+	private Vector2f hitBoxesBR;
+	
+	public MouseHitbox(Vector2f TopLeft, Vector2f BottomRight) {
+		hitBoxesTL = TopLeft;
+		hitBoxesBR = BottomRight;
+	}
+			
+	public Vector2f getTL() {
+		return hitBoxesTL;
+	}
+	
+	public Vector2f getBR() {
+		return hitBoxesBR;
+	}
+	
+	public boolean isClicked(int x, int y) {
+		return (x>hitBoxesTL.x && x<hitBoxesBR.x && y<hitBoxesTL.y && y>hitBoxesBR.y);
+	}
+
+}
