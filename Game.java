@@ -25,10 +25,9 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import playerObjects.Icon;
 import playerObjects.Shop;
+import grid.MouseHitbox;
 
 public class Game extends BasicGame{
-	
-	private String name;
 	
 	private Icon playGame;
 	
@@ -72,6 +71,19 @@ public class Game extends BasicGame{
 		
 	}
 	
+	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
+		if(currScreen == 0) {
+			//This is the mousehitbox for the play button
+			MouseHitbox play = new MouseHitbox(new Vector2f(gc.getWidth()/5*2, gc.getHeight()*7/12), new Vector2f(gc.getWidth()/5*3, gc.getHeight()*7/12+50));
+			if(play.isClicked(mouseX, mouseY)) {
+				currScreen = 1;
+			}
+			
+		} else if(currScreen == 1) {
+			//Stub, add stuff here for more things
+		}
+	}
+	
 	public void update(GameContainer gc, int milli) {
 		totalTime+=milli;
 		
@@ -84,7 +96,10 @@ public class Game extends BasicGame{
 			
 			//TODO make this work. This would parse what locations are relevant based upon screen such as
 			//for the main menu its just the PLAY button, but in game its the shop, turrets, etc.
-			//relevantLocations(mouseX, mouseY);
+			mouseEvents(mouseX, mouseY, gc);
+			//This makes it so if the situation changes placing a different hitbox in the same spot, it does not continue to click.
+			mouseX = -1;
+			mouseY = -1;
 		}
 		
 		//TODO All of the wave stuffs
@@ -92,8 +107,8 @@ public class Game extends BasicGame{
 			//This would return true 1 time before changing to false for each wave (init for waves)
 			if(wave.isStarting) {
 				for(Enemy e: waveEnemies) {
-					e.aStar(); //A* pathfinding
-					startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
+					e.setPath(gr.getPath(new Vector2f(/*SPAWN LOCATION*///), new Vector2f(/*GOAL LOCATION*/)); //A* pathfinding
+					/*startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
 				}
 			}
 			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
@@ -103,14 +118,6 @@ public class Game extends BasicGame{
 			}
 		} */
 		
-	}
-	
-	public int getStrWidth(String s, GameContainer gc) {
-		return gc.getDefaultFont().getWidth(s);
-	}
-	
-	public int getStrHeight(String s, GameContainer gc) {
-		return gc.getDefaultFont().getHeight(s);
 	}
 	
 	public void render(GameContainer gc, org.newdawn.slick.Graphics g) throws SlickException{
@@ -151,10 +158,7 @@ public class Game extends BasicGame{
 			g.resetTransform();
 		}
 		//should check if mouse is located in the rectangle ( but IDK man)and if so, change the screen
-		if( (mouseX > centerX-gc.getWidth()/10) &&  (mouseX < (centerX-gc.getWidth()/10)+gc.getWidth()/5) && (mouseY >= 
-			centerY+gc.getHeight()/12) && (mouseY <= (centerY+gc.getHeight()/12)+50/*Keep the same as h above*/ && currScreen == 0)){
-				currScreen=1;
-			}
+		
 		//make the game screen
 		if(currScreen == 1){
 			g.setColor(new Color(.5f, .5f, .5f));
@@ -167,8 +171,8 @@ public class Game extends BasicGame{
 					turretShop.addIcon(i, j, playGame);
 				}
 			}
-			//TODO FIX, THIS DOES NOT WORK
-			//turretShop.render(g);
+			//TODO FIX, THIS DOES NOT WORK (Does not scale to size
+			turretShop.render(g);
 		}
 	}
 	
