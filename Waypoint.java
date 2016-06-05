@@ -10,6 +10,9 @@ public class Waypoint {
 	private int value;
 	
 	private Waypoint parent;
+	
+	private boolean hasParent;
+	
 	//Makes a way point.
 	Waypoint(Vector2f loc1) {
 		
@@ -40,6 +43,12 @@ public class Waypoint {
 	
 	public void setParent(Waypoint p) {
 		parent = p;
+		hasParent = true;
+	}
+	
+	
+	public boolean hasParent() {
+		return hasParent;
 	}
 	
 }
