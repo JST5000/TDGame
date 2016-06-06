@@ -2,7 +2,7 @@ import org.newdawn.slick.geom.Vectory2f;
 import org.newdawn.slick.Image;
 
 public class redTurret extends Turret {
-  public redTurret(Vector 2f l, boolean canFly, Icon i){
+  public redTurret(Vector2f l, boolean canFly, Icon i){
     super(l, canFly, 2, 2, 1, i);
     }
   }
