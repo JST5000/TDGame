@@ -1,0 +1,6 @@
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Image;
+
+public class crimsonTurret extend Turret {
+  public crimsonTurret(Vector2f l, boolean canFly, Icon i){
+    super(l, canFly, 3, 
