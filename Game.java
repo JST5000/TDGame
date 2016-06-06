@@ -23,6 +23,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import playerObjects.Enemy;
 import playerObjects.Icon;
 import playerObjects.Shop;
 import grid.MouseHitbox;
@@ -41,7 +42,11 @@ public class Game extends BasicGame{
 	
 	private int mouseY;
 	
-	int currScreen;
+	private int currScreen;
+	
+	private Shop turretShop;
+	
+	private Grid gameGrid;
 	
 	public Game(String name) {
 		super(name);
@@ -79,21 +84,45 @@ public class Game extends BasicGame{
 				currScreen = 1;
 			}
 			
+			
+			
 		} else if(currScreen == 1) {
+			Icon [][] shop = turretShop.getStore();
+			for(int i = 0; i<shop.length; i++) {
+				for(int j = 0; j<shop[i].length; j++) {
+					Vector2f[] tlbr = turretShop.iconHitbox(i, j);
+					MouseHitbox clickedIcon = new MouseHitbox(tlbr[0], tlbr[1]);
+					if(clickedIcon.isClicked(mouseX, mouseY)) {
+						//Do the important thing. The one, you know, that is supposed to be here.
+					}
+				}
+			}
+			
 			//Stub, add stuff here for more things
+		}
+	}
+	
+	public void gameInit(GameContainer gc) {
+		gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
+		
+		//turretShop initialization
+		turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
+		for(int i = 0; i<4; i++) {
+			for(int j = 0; j<4; j++) {
+				turretShop.addIcon(i, j, playGame);
+			}
 		}
 	}
 	
 	public void update(GameContainer gc, int milli) {
 		totalTime+=milli;
-		
+		boolean thereCanOnlyBeONE = false;
 		//gets input
 		Input input=gc.getInput();
 		//records location of mouse when mouse is clicked
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			mouseX=input.getMouseX();
 			mouseY=input.getMouseY();
-			
 			//TODO make this work. This would parse what locations are relevant based upon screen such as
 			//for the main menu its just the PLAY button, but in game its the shop, turrets, etc.
 			mouseEvents(mouseX, mouseY, gc);
@@ -101,6 +130,12 @@ public class Game extends BasicGame{
 			mouseX = -1;
 			mouseY = -1;
 		}
+		
+		if(currScreen == 1 && !thereCanOnlyBeONE) {
+			gameInit(gc);
+			thereCanOnlyBeONE = false;
+		}
+			
 		
 		//TODO All of the wave stuffs
 		/*if(waveIncoming) {
@@ -163,14 +198,8 @@ public class Game extends BasicGame{
 		if(currScreen == 1){
 			g.setColor(new Color(.5f, .5f, .5f));
 			g.fillRect(0,0,gc.getWidth(),gc.getHeight());
-			Grid gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
 			gameGrid.render(g);
-			Shop turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
-			for(int i = 0; i<4; i++) {
-				for(int j = 0; j<4; j++) {
-					turretShop.addIcon(i, j, playGame);
-				}
-			}
+			
 			//TODO FIX, THIS DOES NOT WORK (Does not scale to size
 			turretShop.render(g);
 		}
