@@ -3,4 +3,6 @@ import org.newdawn.slick.Image;
 
 public class crimsonTurret extend Turret {
   public crimsonTurret(Vector2f l, boolean canFly, Icon i){
-    super(l, canFly, 3, 
+    super(l, canFly, 4, 2, 2,i);
+    }
+  }
