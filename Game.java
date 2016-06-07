@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -26,6 +25,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import playerObjects.Enemy;
 import playerObjects.Icon;
 import playerObjects.Shop;
+import playerObjects.Turret;
 import grid.MouseHitbox;
 
 public class Game extends BasicGame{
@@ -34,9 +34,9 @@ public class Game extends BasicGame{
 	
 	private Icon logo;
 	
-	private float totalTime;
+	private Turret clicked;
 	
-	private Texture t1;
+	private float totalTime;
 	
 	private int mouseX;
 	
@@ -48,22 +48,30 @@ public class Game extends BasicGame{
 	
 	private Grid gameGrid;
 	
+	private boolean hasClicked;
+	
+	private boolean thereCanOnlyBeONE;
+	
+	private int money;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
 	}
 	
+	//Initializes all the necessary values for the main screen and general properties
 	public void init(GameContainer gc) {
 		//This limits the computer processing power cost
 		gc.setTargetFrameRate(60);
 		gc.setShowFPS(false);
 		currScreen = 0;
+		money = 200;
 		
 		
 		
 		try {
 			Texture t1 = TextureLoader.getTexture("jpg",  new FileInputStream(new File("./res/PlayButtonIcon.jpg")));
-			playGame = new Icon(new Image(t1), new Vector2f( 75, 100));
+			playGame = new Icon(new Image(t1), new Vector2f( 50, 50));
 			Texture tHardcoreLemon = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/hardcoreLemon.jpg")));
 			this.logo = new Icon(new Image(tHardcoreLemon), new Vector2f(400, 300));
 		}
@@ -76,34 +84,17 @@ public class Game extends BasicGame{
 		
 	}
 	
-	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
-		if(currScreen == 0) {
-			//This is the mousehitbox for the play button
-			MouseHitbox play = new MouseHitbox(new Vector2f(gc.getWidth()/5*2, gc.getHeight()*7/12), new Vector2f(gc.getWidth()/5*3, gc.getHeight()*7/12+50));
-			if(play.isClicked(mouseX, mouseY)) {
-				currScreen = 1;
-			}
-			
-			
-			
-		} else if(currScreen == 1) {
-			Icon [][] shop = turretShop.getStore();
-			for(int i = 0; i<shop.length; i++) {
-				for(int j = 0; j<shop[i].length; j++) {
-					Vector2f[] tlbr = turretShop.iconHitbox(i, j);
-					MouseHitbox clickedIcon = new MouseHitbox(tlbr[0], tlbr[1]);
-					if(clickedIcon.isClicked(mouseX, mouseY)) {
-						//Do the important thing. The one, you know, that is supposed to be here.
-					}
-				}
-			}
-			
-			//Stub, add stuff here for more things
-		}
-	}
-	
+	//Initializes all the values necessary for the main game page
 	public void gameInit(GameContainer gc) {
+		//Game grid for the turrets/enemies/ etc.
 		gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
+		Bunker b =  new Bunker(20, new Vector2f(8,8), playGame);
+		gameGrid.change(8, 8, b.getId());
+		
+		
+		//Used so that the in game things only initialize once.
+		thereCanOnlyBeONE = false;
+		
 		
 		//turretShop initialization
 		turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
@@ -114,18 +105,65 @@ public class Game extends BasicGame{
 		}
 	}
 	
+	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
+		if(currScreen == 0) {
+			//This is the mousehitbox for the play button
+			MouseHitbox play = new MouseHitbox(new Vector2f(gc.getWidth()/5*2, gc.getHeight()*7/12), new Vector2f(gc.getWidth()/5*3, gc.getHeight()*7/12+50));
+			if(play.isClicked(mouseX, mouseY)) {
+				currScreen = 1;
+			}
+			
+			//Turrets are rendered constantly as fixed members of the grid, enemies are not a piece of the grid and as such go over it.
+			
+		} else if(currScreen == 1) {
+			Icon [][] shop = turretShop.getStore();
+			Vector2f relLoc = new Vector2f(mouseX-gameGrid.getLoc().x, mouseY-gameGrid.getLoc().y);
+			//If the player clicked on the game grid, and had a turret selected
+			if(hasClicked && relLoc.x<gameGrid.getSize().x && relLoc.y<gameGrid.getSize().y) {
+				int x = (int)(relLoc.x/gameGrid.getGrid().length);
+				int y = (int)(relLoc.y/gameGrid.getGrid()[0].length);
+				//If there is nothing there, or just a ghost wall (id 2) make the id of that spot into the turret currently selected.
+				if(gameGrid.getGrid()[x][y] == 0 || gameGrid.getGrid()[x][y] == 2) {
+					gameGrid.change(x, y, clicked.getId());
+				}
+			}
+				
+			
+			for(int i = 0; i<shop.length; i++) {
+				for(int j = 0; j<shop[i].length; j++) {
+					Vector2f[] tlbr = turretShop.iconHitbox(i, j);
+					MouseHitbox clickedIcon = new MouseHitbox(tlbr[0], tlbr[1]);
+					
+					//This sets the clicked turret as the "clicked" or selected turret for placement
+					if(clickedIcon.isClicked(mouseX, mouseY)) {
+						clicked = turretShop.getTurret(i, j);
+						hasClicked = true;
+						money -= clicked.getCost();
+					}
+				}
+			}
+			
+			//Stub, add stuff here for more things
+		}
+	}
+	
+
+	
 	public void update(GameContainer gc, int milli) {
 		totalTime+=milli;
-		boolean thereCanOnlyBeONE = false;
 		//gets input
 		Input input=gc.getInput();
+		
+		
 		//records location of mouse when mouse is clicked
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			mouseX=input.getMouseX();
 			mouseY=input.getMouseY();
+			
 			//TODO make this work. This would parse what locations are relevant based upon screen such as
 			//for the main menu its just the PLAY button, but in game its the shop, turrets, etc.
 			mouseEvents(mouseX, mouseY, gc);
+			
 			//This makes it so if the situation changes placing a different hitbox in the same spot, it does not continue to click.
 			mouseX = -1;
 			mouseY = -1;
@@ -133,7 +171,7 @@ public class Game extends BasicGame{
 		
 		if(currScreen == 1 && !thereCanOnlyBeONE) {
 			gameInit(gc);
-			thereCanOnlyBeONE = false;
+			thereCanOnlyBeONE = true;
 		}
 			
 		
@@ -202,7 +240,26 @@ public class Game extends BasicGame{
 			
 			//TODO FIX, THIS DOES NOT WORK (Does not scale to size
 			turretShop.render(g);
+			g.drawString("You have: $"+money+"", gc.getWidth()-200, gc.getHeight()-40);
 		}
+		
+		//This draws all of the turrets that are already on the board.
+		
+		for(int i = 0; i<gameGrid.getGrid().length; i++) {
+			for(int j = 0; j<gameGrid.getGrid()[i].length; j++) {
+				//TODO REPEAT THIS FOR ALL TURRETS ON THE GRID
+				if(gameGrid.getGrid()[i][j] == 1) {
+					//Draw wall
+				} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
+					//Draw Turret type 1
+				}	//.............. etc.
+			}
+		}
+		
+		if(hasClicked) {
+			clicked.getDesign().getDesign().draw(mouseX, mouseY);
+		}
+		
 	}
 	
 	public static void main(String[] args) {
