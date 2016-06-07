@@ -4,6 +4,6 @@ import org.newdawn.slick.Image;
 
 public class red3Turret extends Turret {
   public red3Turret(Vector2f l, boolean canFly, Icon i){
-    super(l, canFly, 6, 3, 4, i);
+    super(l, canFly, 7, 3, 4, i);
     }
   }
