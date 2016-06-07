@@ -2,8 +2,8 @@
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.Image;
 
-public class goldTurret extends Turret {
-  public goldTurret(Vector2f l, boolean canFly, Icon i){
+public class yellow2Turret extends Turret {
+  public yellow2Turret(Vector2f l, boolean canFly, Icon i){
     super(l, canFly, 3, 4, 2, i);
     }
   }
