@@ -18,9 +18,9 @@ public class Centaur extends Enemy
 // 	throws IOException;
 	{
 	
-		super(false, 10, 1, 2, loc, vel, size, img);
+		super(false, 10, 3, 2, loc, vel, size, img);
 // 		canFly = false;
-// 		hp = 10;   //Can be changed
+// 		hp = 2;   //Can be changed
 // 		this.vel = vel;  //Can be changed
 // 		this.size = size; //Can be changed
 // 		atk = hp;
