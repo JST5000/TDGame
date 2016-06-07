@@ -1,14 +1,24 @@
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.Image;
+
+   import org.newdawn.slick.AppGameContainer;
+   import org.newdawn.slick.BasicGame;
+   import org.newdawn.slick.Color;
+   import org.newdawn.slick.GameContainer;
+   import org.newdawn.slick.Graphics;
+   import org.newdawn.slick.Image;
+   import org.newdawn.slick.Input;
+   import org.newdawn.slick.SlickException;
+   import org.newdawn.slick.Sound;
+   import org.newdawn.slick.geom.Rectangle;
+   import org.newdawn.slick.geom.Vector2f;
 
 public class Carriage extends Enemy
 {
-	public Carriage(Vector2f loc, Vector2f vel, Vector2f size)
-	throws FileNotFoundException;
-	throws IOException;
+	public Carriage(Vector2f loc, Vector2f vel, Vector2f size, Icon img)
+	//throws FileNotFoundException;
+	//throws IOException;
 	{
 	
-		super(false, 5, 1, 5, loc, vel, size, new Image(2, 2));
+		super(false, 50, 1, 5, loc, vel, size, img);
 // 		canFly = false;
 // 		hp = 5;   //Can be changed
 // 		this.vel = vel;  //Can be changed
