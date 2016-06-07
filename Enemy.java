@@ -1,4 +1,3 @@
-	
    import org.newdawn.slick.AppGameContainer;
    import org.newdawn.slick.BasicGame;
    import org.newdawn.slick.Color;
@@ -44,7 +43,10 @@
     //Creates grid at location
       public void render()
       {
-         img.draw(loc.x, loc.y);
+			if(hp > 0)
+			{
+         img.getDesign().draw(loc.x, loc.y);
+			}
       }
    
       public void hit()
@@ -81,6 +83,4 @@
       {
          return img;
       }
-   
-   
    }
