@@ -54,6 +54,8 @@ public class Game extends BasicGame{
 	
 	private int money;
 	
+	private Bunker b;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
@@ -88,7 +90,7 @@ public class Game extends BasicGame{
 	public void gameInit(GameContainer gc) {
 		//Game grid for the turrets/enemies/ etc.
 		gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
-		Bunker b =  new Bunker(20, new Vector2f(8,8), playGame);
+		b =  new Bunker(20, new Vector2f(8,8), playGame);
 		gameGrid.change(8, 8, b.getId());
 		
 		
@@ -106,6 +108,14 @@ public class Game extends BasicGame{
 	}
 	
 	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
+		MouseHitbox credits = new MouseHitbox(new Vector2f(15, gc.getHeight()-40), new Vector2f(100, gc.getHeight()-10));
+		MouseHitbox credits2 = new MouseHitbox(new Vector2f(15, gc.getHeight()-40), new Vector2f(145, gc.getHeight()-10));
+		if(credits.isClicked(mouseX, mouseY) && currScreen == 0) {
+			currScreen = 4;
+		} else if(credits2.isClicked(mouseX, mouseY) && currScreen != 0) {
+			currScreen = 0;
+		}
+		
 		if(currScreen == 0) {
 			//This is the mousehitbox for the play button
 			MouseHitbox play = new MouseHitbox(new Vector2f(gc.getWidth()/5*2, gc.getHeight()*7/12), new Vector2f(gc.getWidth()/5*3, gc.getHeight()*7/12+50));
@@ -125,6 +135,7 @@ public class Game extends BasicGame{
 				//If there is nothing there, or just a ghost wall (id 2) make the id of that spot into the turret currently selected.
 				if(gameGrid.getGrid()[x][y] == 0 || gameGrid.getGrid()[x][y] == 2) {
 					gameGrid.change(x, y, clicked.getId());
+					hasClicked = false;
 				}
 			}
 				
@@ -202,7 +213,7 @@ public class Game extends BasicGame{
 		TrueTypeFont t = new TrueTypeFont(font, false);
 		g.setFont(t);
 		
-		//Main Menu = 0
+			//Main Menu = 0
 		if(currScreen == 0) {
 			
 			//Title that appears in the center of the screen with default font and size
@@ -241,23 +252,62 @@ public class Game extends BasicGame{
 			//TODO FIX, THIS DOES NOT WORK (Does not scale to size
 			turretShop.render(g);
 			g.drawString("You have: $"+money+"", gc.getWidth()-200, gc.getHeight()-40);
-		}
+		
 		
 		//This draws all of the turrets that are already on the board.
+		//TODO fill in the stubs.
+			for(int i = 0; i<gameGrid.getGrid().length; i++) {
+				for(int j = 0; j<gameGrid.getGrid()[i].length; j++) {
+					//TODO REPEAT THIS FOR ALL TURRETS ON THE GRID
+					if(gameGrid.getGrid()[i][j] == 1) {
+						//Draw wall
+					} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
+						//Draw Turret type 1
+					} else if(gameGrid.getGrid()[i][j] == 4 /*Second Turret ID*/) {
+						//Draw Turret type 2
+					} else if(gameGrid.getGrid()[i][j] == 5 /*Third Turret ID*/) {
+						//Draw Turret type 3
+					} else if(gameGrid.getGrid()[i][j] == 6 /*Fourth Turret ID*/) {
+						//Draw Turret type 4
+					} else if(gameGrid.getGrid()[i][j] == 7 /*Fifth Turret ID*/) {
+						//Draw Turret type 5
+					} else if(gameGrid.getGrid()[i][j] == 8 /*Sixth Turret ID*/) {
+						//Draw Turret type 6
+					} else if(gameGrid.getGrid()[i][j] == b.getId() /*Bunker ID*/) {
+						//This draws the bunker, ID = 100, This then draws it in the dead center of the map
+						b.getDesign().getDesign().draw(gameGrid.getLoc().x+(i-1)*gameGrid.getSize().x/gameGrid.getGrid().length,
+														gameGrid.getLoc().y + (j-1)*gameGrid.getSize().y/gameGrid.getGrid()[i].length);
+					}	//.............. etc.
+				}
+			}
 		
-		for(int i = 0; i<gameGrid.getGrid().length; i++) {
-			for(int j = 0; j<gameGrid.getGrid()[i].length; j++) {
-				//TODO REPEAT THIS FOR ALL TURRETS ON THE GRID
-				if(gameGrid.getGrid()[i][j] == 1) {
-					//Draw wall
-				} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
-					//Draw Turret type 1
-				}	//.............. etc.
+			if(hasClicked) {
+				clicked.getDesign().getDesign().draw(mouseX, mouseY);
 			}
 		}
 		
-		if(hasClicked) {
-			clicked.getDesign().getDesign().draw(mouseX, mouseY);
+		//Credit page layout
+		if(currScreen == 4) {
+			//TODO ADD LINKS TO THE DRAWING PROJECT UPON CLICKING EACH PERSON'S NAME
+			g.setColor(new Color(98, 191, 250));
+			g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
+			g.setColor(Color.black);
+			g.drawString("Coded and Designed by :", gc.getWidth()/2-130, gc.getHeight()/3);
+			g.drawString("Sage Minard,", gc.getWidth()/2-75, gc.getHeight()/2);
+			g.drawString("Marlena Rehder,", gc.getWidth()/2-90, gc.getHeight()/2+30);
+			g.drawString("And Jackson Mills!", gc.getWidth()/2 - 100, gc.getHeight()/2+60);
+			g.drawString("June, 2016", gc.getWidth()/2 - 65, gc.getHeight()/2 + 200);
+		}
+		
+		//Links to the main menu and credit screens
+		if(currScreen == 0) {
+			g.setColor(Color.black);
+			g.drawRect(15, gc.getHeight()-40, 85,  30);
+			g.drawString("Credits", 20, gc.getHeight()-40);
+		} else {
+			g.setColor(Color.black);
+			g.drawRect(15, gc.getHeight() - 40, 130, 30);
+			g.drawString("Main Menu", 20, gc.getHeight()-40);
 		}
 		
 	}
