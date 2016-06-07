@@ -1,0 +1,36 @@
+import java.awt.*;
+public class Doodle {
+   public static void main(String[] args) {
+      DrawingPanel panel = new DrawingPanel(300, 300);   	      
+      panel.setBackground(Color.CYAN);
+      Graphics g = panel.getGraphics();
+      
+      Totoro(g, 70, 80, 1, 1);
+   } 
+   public static void Totoro(Graphics g, int x, int y, int size, int shape) {
+      g.setColor(Color.GRAY);
+      g.fillOval(x, y, 160, 180);
+      g.fillOval(x + 20, y - 25, 120, 120);
+      g.fillOval(x - 10, y + 35, 80, 110);
+      g.fillOval(x + 90, y + 35, 80, 110);
+      g.fillOval(x + 45, y - 55, 30, 50);
+      g.fillOval(x + 85, y - 55, 30, 50);
+      g.setColor(Color.WHITE);
+      g.fillOval(x + 40, y, 20, 20);
+      g.fillOval(x + 100, y, 20, 20);
+      g.setColor(Color.BLACK);
+      g.fillOval(x + 42, y + 3, 10, 10);
+      g.fillOval(x + 102, y + 3, 10, 10);
+      g.setColor(Color.LIGHT_GRAY);
+      g.fillOval(x + 23, y + 37, 120, 130);
+      g.setColor(Color.DARK_GRAY);
+      g.fillOval(x + 71, y + 7, 20, 7);
+      g.fillOval(x + 70, y + 50, 25, 20);
+      g.fillOval(x + 45, y + 60, 25, 20);
+      g.fillOval(x + 95, y + 60, 25, 20);
+      g.setColor(Color.LIGHT_GRAY);
+      g.fillOval(x + 70, y + 60, 25, 20);
+      g.fillOval(x + 45, y + 70, 25, 20);
+      g.fillOval(x + 95, y + 70, 25, 20);
+   }
+}
