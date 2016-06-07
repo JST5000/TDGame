@@ -24,7 +24,7 @@ public class MouseHitbox {
 	}
 	
 	public boolean isClicked(int x, int y) {
-		return (x>hitBoxesTL.x && x<hitBoxesBR.x && y<hitBoxesTL.y && y>hitBoxesBR.y);
+		return (x>hitBoxesTL.x && x<hitBoxesBR.x && y>hitBoxesTL.y && y<hitBoxesBR.y);
 	}
 
 }
