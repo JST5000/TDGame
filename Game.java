@@ -164,8 +164,7 @@ public class Game extends BasicGame{
 		totalTime+=milli;
 		//gets input
 		Input input=gc.getInput();
-		
-		
+				
 		//records location of mouse when mouse is clicked
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			mouseX=input.getMouseX();
@@ -227,7 +226,7 @@ public class Game extends BasicGame{
 			
 			//Title being printed
 			g.setColor(Color.black);
-			g.setBackground(new Color(.5f,.5f,.5f));
+			g.setBackground(new Color(.7f,.7f,.7f));
 			g.drawString(title, centerX-titleL/2, centerY-titleW/2);
 			//g.resetTransform();
 			
@@ -245,7 +244,7 @@ public class Game extends BasicGame{
 		
 		//make the game screen
 		if(currScreen == 1){
-			g.setColor(new Color(.5f, .5f, .5f));
+			g.setColor(new Color(.7f, .7f, .7f));
 			g.fillRect(0,0,gc.getWidth(),gc.getHeight());
 			gameGrid.render(g);
 			
@@ -262,6 +261,8 @@ public class Game extends BasicGame{
 					if(gameGrid.getGrid()[i][j] == 1) {
 						//Draw wall
 					} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
+					//	Turret t1 = new Turret(new Vector2f(i*gameGrid.getSize().x/gameGrid.getGrid().length, j*gameGrid.getSize().y/gameGrid.getGrid()[i].length),
+						//		true, 1, 3, false, playGame, 3, 50);
 						//Draw Turret type 1
 					} else if(gameGrid.getGrid()[i][j] == 4 /*Second Turret ID*/) {
 						//Draw Turret type 2
@@ -316,7 +317,7 @@ public class Game extends BasicGame{
 		try{
 			Game TD = new Game("Tower Defense");
 			AppGameContainer window = new AppGameContainer(TD);
-			window.setDisplayMode(1000, 800, false);
+			window.setDisplayMode(900, 900, false);
 			window.start();
 			TD.init(window);
 			
