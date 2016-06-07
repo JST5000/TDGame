@@ -1,13 +1,23 @@
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.Image;
+
+   import org.newdawn.slick.AppGameContainer;
+   import org.newdawn.slick.BasicGame;
+   import org.newdawn.slick.Color;
+   import org.newdawn.slick.GameContainer;
+   import org.newdawn.slick.Graphics;
+   import org.newdawn.slick.Image;
+   import org.newdawn.slick.Input;
+   import org.newdawn.slick.SlickException;
+   import org.newdawn.slick.Sound;
+   import org.newdawn.slick.geom.Rectangle;
+   import org.newdawn.slick.geom.Vector2f;
 
 public class Dragon extends Enemy
 {
-	public Dragon(Vector2f loc, Vector2f vel, Vector2f size)
-	throws FileNotFoundException;
-	throws IOException;
+	public Dragon(Vector2f loc, Vector2f vel, Vector2f size, Icon img)
+// 	throws FileNotFoundException;
+// 	throws IOException;
 	{
-		super(true, 3, 3, 3, loc, vel, size, new Image(2, 2));
+		super(true, 30, 10, 3, loc, vel, size, img);
 // 		canFly = true;
 // 		hp = 3;   //Can be changed
 // 		this.vel = vel;  //Can be changed
@@ -15,7 +25,7 @@ public class Dragon extends Enemy
 // 		atk = hp;
 // 		this.loc = loc;
 // 		def = 3;  //Can be changed
-// 		Image img = new Image(/* Poopy image (Use png, that allows see through shit)*/);
+// 		Icon img = new Icon(/* Poopy Icon (Use png, that allows see through shit)*/);
 // 		this.img = img;
 	}
 }
