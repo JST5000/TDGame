@@ -1,9 +1,0 @@
-
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.Image;
-
-public class mikaTurret extends Turret {
-  public mikaTurret(Vector2f l, boolean canFly, Icon i){
-    super(l, canFly, 6, 2, 1, i);
-    }
-  }
