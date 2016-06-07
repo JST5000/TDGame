@@ -18,7 +18,7 @@ public class Carriage extends Enemy
 	//throws IOException;
 	{
 	
-		super(false, 50, 1, 5, loc, vel, size, img);
+		super(false, 50, 20, 5, loc, vel, size, img);
 // 		canFly = false;
 // 		hp = 5;   //Can be changed
 // 		this.vel = vel;  //Can be changed
