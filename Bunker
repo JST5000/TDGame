@@ -1,0 +1,46 @@
+package grid;
+
+import org.newdawn.slick.geom.Vector2f;
+
+import playerObjects.Icon;
+
+public class Bunker {
+	
+	//Hitpoints before game over
+	private int hp;
+	
+	//Location on grid
+	private Vector2f loc;
+	
+	private Icon image;
+	
+	//On-grid identifier
+	private int id;
+	
+	public Bunker(int hitpoints, Vector2f loc, Icon i) {
+		
+		hp = hitpoints; //This is the hp of the bunker, setting the hits before the player loses.
+		
+		this.loc = loc; //This is the location relative to the grid
+		
+		image = i; //This is the bunker image that is displayed
+		
+		id = 100; //This is to render it on the grid and recognize where it is
+	}
+	
+	public int getHp() {
+		return hp;
+	}
+	
+	public Vector2f getLoc() {
+		return loc;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public Icon getDesign() {
+		return image;
+	}
+}
