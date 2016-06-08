@@ -1,0 +1,253 @@
+package main;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+
+
+public class DrawingCollection {
+
+	
+	public DrawingCollection() {
+		
+	}
+	
+	public static void lenaDrawing(Graphics g) {
+		 g.setColor(Color.gray);
+	      g.fillOval(70, 80, 160, 180);
+	      g.fillOval(70 + 20, 80 - 25, 120, 120);
+	      g.fillOval(70 - 10, 80 + 35, 80, 110);
+	      g.fillOval(70 + 90, 80 + 35, 80, 110);
+	      g.fillOval(70 + 45, 80 - 55, 30, 50);
+	      g.fillOval(70 + 85, 80 - 55, 30, 50);
+	      g.setColor(Color.white);
+	      g.fillOval(70 + 40, 80, 20, 20);
+	      g.fillOval(70 + 100, 80, 20, 20);
+	      g.setColor(Color.black);
+	      g.fillOval(70 + 42, 80 + 3, 10, 10);
+	      g.fillOval(70 + 102, 80 + 3, 10, 10);
+	      g.setColor(Color.lightGray);
+	      g.fillOval(70 + 23, 80 + 37, 120, 130);
+	      g.setColor(Color.darkGray);
+	      g.fillOval(70 + 71, 80 + 7, 20, 7);
+	      g.fillOval(70 + 70, 80 + 50, 25, 20);
+	      g.fillOval(70 + 45, 80 + 60, 25, 20);
+	      g.fillOval(70 + 95, 80 + 60, 25, 20);
+	      g.setColor(Color.lightGray);
+	      g.fillOval(70 + 70, 80 + 60, 25, 20);
+	      g.fillOval(70 + 45, 80 + 70, 25, 20);
+	      g.fillOval(70 + 95, 80 + 70, 25, 20);
+	}
+	
+	public static void jacksonDrawing(Graphics g) 
+		throws FileNotFoundException, IOException{
+		Texture t1 = TextureLoader.getTexture("png", new FileInputStream("./res/Wizard.png"));
+		Image jacksonDrawing = new Image(t1);
+		g.drawImage(jacksonDrawing, 20, 20);
+	}
+	
+	
+/*	public static void jacksonDrawing(Graphics g) {
+		Polygon hat = new Polygon();
+        Color brown = new Color(80,20,0);
+		g.setColor(Color.white);
+		g.fillOval(105,-20,50,50);
+		cloud(g,80,20,20);
+		cloud(g,80,40,20);
+		robe(g,20,160,80);
+        hand(g,72,235,25);
+        face(g,20,130,80);
+        hat(hat,g,10,10);
+        feet(g,25,306,30);
+        feet(g,65,306,30);
+        star(g,55,50);
+        star(g,67,65);
+        star(g,45,80);
+        star(g,77,90);
+        star(g,50,105);
+        star(g,85,120);
+        star(g,70,115);
+        star(g,32,130);
+        g.setColor(brown);
+        wideLine(g,80,250,100,180,10,brown,0);
+        magic(g,100,155,4);
+        magic(g,115,145,3);
+        magic(g,105,130,2);
+			magic(g,108,140,2);
+			magic(g,112,160,2);
+			magic(g,100,145,2);
+     }
+     
+     //This makes the stars
+     public static void shape(Graphics g, int x, int y){
+        Polygon triangle1 = new Polygon();
+        Polygon triangle2 = new Polygon();
+        Polygon triangle3 = new Polygon();
+     
+     
+        triangle1.addPoint(x+4,y-2);
+        triangle1.addPoint(x+4,y+8);
+        triangle1.addPoint(x-8,y-2);
+        triangle2.addPoint(x+10,y-2);
+        triangle2.addPoint(x-4,y+8);
+        triangle2.addPoint(x-4,y-2);
+        triangle3.addPoint(x,y-8);
+        triangle3.addPoint(x-2,y-2);
+        triangle3.addPoint(x+2,y-2);
+        g.setColor(Color.yellow);
+        g.fillPolygon(triangle1);
+        g.fillPolygon(triangle2);
+        g.fillPolygon(triangle3);
+     }
+     public static void star(Graphics g,int x, int y) {
+     
+     //This defines the stars' insides
+        shape(g, x, y);
+     
+     //This prints the outline of the star
+        g.setColor(Color.BLACK);
+        g.drawLine(x,y-8,x+2,y-2);
+        g.drawLine(x+2,y-2,x+8,y-2);
+        g.drawLine(x+8,y-2,x+4,y+2);
+        g.drawLine(x+4,y+2,x+4,y+8);
+        g.drawLine(x+4,y+8,x,y+4);
+        g.drawLine(x,y+4,x-4,y+8);
+        g.drawLine(x-4,y+8,x-4,y+2);
+        g.drawLine(x-4,y+2,x-8,y-2);
+        g.drawLine(x-8,y-2,x-2,y-2);
+        g.drawLine(x-2,y-2,x,y-8);
+     }
+     //This makes the triangle for the hat and also the rectangle for the brim
+     public static void hat(Polygon hat,Graphics g,int x, int y) {
+        Color DarkBlue = new Color(0,0,150);
+        g.setColor(Color.BLUE);
+        hat.addPoint(x+50,y);
+        hat.addPoint(x,y+150);
+        hat.addPoint(x+100,y+150);
+        g.fillPolygon(hat);
+        g.setColor(Color.BLACK);
+        g.drawLine(x+50,y,x,y+150);
+        g.drawLine(x,y+150,x+100,y+150);
+        g.drawLine(x+100,y+150,x+50,y);
+        g.setColor(DarkBlue);
+        g.fillRect(x,y+130,100,20);
+        g.setColor(Color.BLACK);
+        g.drawRect(x,y+130,100,20);
+        g.drawLine(x,y+129,x+100,y+129);
+     }
+		
+		//This makes a cloud
+		public static void cloud(Graphics g,int x, int y, int s){
+			g.setColor(Color.LIGHT_GRAY);
+			int x1 = (int)(Math.random()*x);
+			int y1 = (int)(Math.random()*y);
+			for(int i = 0; i < 4; i++){
+				g.fillOval(x1+s/2*i,y1+s/4*i,s,s);
+				g.fillOval(x1-s/2*i+s*4/2,y1+s/4*i,s,s);
+				g.fillOval(x1-s/2*i+s*4/2,y1-s/4*i,s,s);
+				g.fillOval(x1+s/2*i,y1-s/4*i,s,s);
+			}
+		}
+  
+  //This prints a thinning line with a certain width
+     public static void wideLine(Graphics g, int x, int y, int x1, int x2, int s, Color DarkBrown, int section) {
+        for(int i = 0; i<s; i++) {
+           if(i>=0 & i<=(s-1))
+              g.setColor(DarkBrown);
+           if(i==s-1) {
+              g.setColor(Color.BLACK);
+           }
+           if(section==1)
+              g.setColor(Color.BLACK);
+        	g.drawLine(x+i,y,x1+i/2,x2);
+        }
+			g.setColor(Color.BLACK);
+			g.drawLine(x,y,x1,x2);
+			g.drawLine(x1,x2,x1+s/2,x2);
+			g.drawLine(x,y,x+s,y);
+     }
+		
+		
+  
+	
+	
+	public static void face(Graphics g, int x, int y, int s){
+		//25,135,55 This makes the base of the face
+		Polygon goatee  = new Polygon();
+		Color skin = new Color(232,212,155);
+		g.setColor(skin);
+		g.fillOval(x,y,s,s);
+		
+		//This makes the mouth and eyes
+		g.setColor(Color.black);
+		g.drawOval(x,y,s,s);
+		g.fillOval(x+20,y+40,10,10);
+		g.fillOval(x+50,y+40,10,10);
+		g.drawLine(x+25,y+60,x+55,y+60);
+		
+		//This makes the beard
+		g.setColor(Color.lightGray);
+		goatee.addPoint(x+30,y+70);
+		goatee.addPoint(x+50,y+70);
+		goatee.addPoint(x+40,y+90);
+		g.fillPolygon(goatee);
+		g.setColor(Color.BLACK);
+		g.drawPolygon(goatee);
+	}
+
+//This prints the robe/cloak
+public static void robe(Graphics g, int x, int y, int s){
+Color DarkBlue = new Color(0,55,125);
+g.setColor(DarkBlue);
+g.fillOval(x,y,s,s);
+g.setColor(Color.BLACK);
+g.drawOval(x,y,s,s);
+g.setColor(DarkBlue);
+g.fillRect(x,y+s/2,s,s*3/2);
+g.setColor(Color.BLACK);
+g.drawRect(x,y+s/2,s,s*3/2);
+g.setColor(DarkBlue);
+g.drawLine(x+1,y+s/2,x-1+s,y+s/2);
+g.setColor(Color.BLACK);
+wideLine(g,x+s/2,y,x+s/2,y+s*2,2,DarkBlue,1);
+}
+
+//This prints the hands
+public static void hand(Graphics g, int x, int y, int s){
+Color skin = new Color(232,212,155);
+g.setColor(skin);
+g.fillOval(x,y,s,s);
+g.setColor(Color.BLACK);
+g.drawOval(x,y,s,s);
+}
+
+//This prints the feet
+public static void feet(Graphics g, int x,int y,int s){
+g.setColor(Color.BLACK);
+g.fillOval(x,y,s,s);
+g.setColor(Color.DARK_GRAY);
+g.fillRect(x,y+s/2,s,s/2);
+}
+
+//This makes a lightning bolt!
+public static void magic(Graphics g, int x, int y, int s){
+Polygon lightning = new Polygon();
+lightning.addPoint(x,y);
+lightning.addPoint(x,y+2*s);
+lightning.addPoint(x+2*s,y+3*s);
+lightning.addPoint(x,y+6*s);
+lightning.addPoint(x,y+4*s);
+lightning.addPoint(x-2*s,y+3*s);
+g.setColor(Color.YELLOW);
+g.fillPolygon(lightning);
+g.setColor(Color.BLACK);
+g.drawPolygon(lightning);
+}*/
+}
