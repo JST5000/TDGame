@@ -83,4 +83,33 @@
       {
          return img;
       }
+      public Vector2f getDirection(Vector2f one, Vector2f two)
+      {
+      	int a = ((int)one.getX);
+      	int b = ((int)one.getY);
+      	int c = ((int)two.getX);
+	int d = ((int)two.getY);
+	Vector2f left = new Vector2f(270.0);
+	Vector2f right = new Vector2f(90.0);
+	Vector2f up = new Vector2f(0.0);
+	Vector2f down = new Vector2f(180.0);
+      
+	 if(a > c)
+      	 {
+         return left;
+      }
+      else if (c > a)
+      {
+         return right;
+      }
+      else if (b > d)
+      {
+         return down; 
+      }
+      else
+      {
+         return up;
+      }
+   }
+
    }
