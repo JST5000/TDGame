@@ -1,5 +1,13 @@
+package grid;
+
 import org.newdawn.slick.geom.Vector2f;
+
+import playerObjects.Enemy;
+
 import org.newdawn.slick.Graphics;
+
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 
 //This makes a grid for laying out other objects. It is used for in game management
@@ -46,6 +54,11 @@ public class Grid {
 		return gr[r][c];
 	}
 	
+	//Gives grid position based off a vector.
+	public int get(Vector2f r) {
+		return gr[(int)r.x][(int)r.y];
+	}
+	
 	//Returns the grid
 	public int[][] getGrid() {
 		return gr;
@@ -74,6 +87,92 @@ public class Grid {
 		for(int i = 0; i<gr[0].length + 1; i++) {
 			g.drawLine((int)(location.x), (int)(location.y+size.y/gr[0].length*i), (int) (location.x + size.x), (int)(location.y+size.y/gr[0].length*i)); 
 		}
+	}
+	
+	//This is the A* Value system. Distance between start and point vs end and point.
+	private static int value(Vector2f start, Vector2f goal, Vector2f loc, Waypoint w) {
+		
+		int inheritance = 0;
+		
+		//This determines how much is inherited via the path.
+		if(w.hasParent()) {
+			inheritance = w.getParent().getValue();
+		}
+		
+		//This starts with value of point from start (g) and ends with heuristic of proximity to end (h)
+		return (int)(start.x+goal.x-2*loc.x)+(int)(start.y+goal.y-2*loc.y)+inheritance;
+		
+	}
+	private Vector2f[] getAdjacent(Vector2f loc) {
+		//An array of the locations that an object can move to assuming 4 way motion only
+		//This gets the adjacent locations if possible and leaves null if they do not exist
+		Vector2f[] adjacents = new Vector2f[4];
+		//Left side
+		if(loc.x!=0 && gr[(int)loc.x-1][(int)loc.y] == 0 || gr[(int)loc.x-1][(int)loc.y] == 100) {
+			adjacents[0] = new Vector2f(loc.x-1, loc.y);
+		}
+		//Top side
+		if(loc.y!=0 && gr[(int)loc.x][(int)loc.y-1] == 0|| gr[(int)loc.x][(int)loc.y-1] == 100) {
+			adjacents[1] = new Vector2f(loc.x, loc.y-1);
+		}
+		//Right side
+		if(loc.x!=gr.length-1 && gr[(int)loc.x+1][(int)loc.y] == 0 || gr[(int)loc.x+1][(int)loc.y] == 100) {
+			adjacents[2] = new Vector2f(loc.x+1, loc.y);
+		}
+		//Bottom side
+		if(loc.y!=gr[0].length-1 && gr[(int)loc.x][(int)loc.y+1] == 0 || gr[(int)loc.x][(int)loc.y+1] == 100) {
+			adjacents[3] = new Vector2f(loc.x, loc.y+1);
+		}
+		return adjacents;
+	}
+	
+	
+	public Waypoint getPath(Vector2f loc, Vector2f goal) {
+		ArrayList<Waypoint> open = new ArrayList<Waypoint>();
+		ArrayList<Waypoint> closed = new ArrayList<Waypoint>();
+		Waypoint parent = new Waypoint(loc);
+		open.add(parent);
+		parent.setValue(0);
+		
+		while(!open.isEmpty()) {
+			Waypoint mostPromising = open.get(0);
+			int q = 0;
+			for(int i = 0; i<open.size(); i++) {
+				open.get(i).setParent(parent);
+				if(open.get(i).equals(goal)) {
+					//This gives a waypoint who's parents can be followed up the chain to find the path
+					return open.get(i);
+				} 
+				
+				//This finds the most promising waypoint to search from ^ and below
+				
+				int v = value(loc, goal, open.get(i).getLoc(), open.get(i));
+				open.get(i).setValue(v);
+				if(v < mostPromising.getValue()) {
+					q = i;
+					mostPromising = open.get(i);
+				}
+			}
+			
+			//This adds new things to the open list
+			Vector2f[] adjacent = getAdjacent(open.get(q).getLoc());
+			for(int j = 0; j<adjacent.length; j++) {
+				Waypoint initiate = new Waypoint(adjacent[j]);
+				initiate.setParent(mostPromising);
+				initiate.setValue(value(loc, goal, initiate.getLoc(), initiate)+mostPromising.getValue());
+				
+				//If there are better options in closed or open this code ignores the node
+				if(closed.contains(initiate) && closed.get(closed.indexOf(initiate)).getValue() < initiate.getValue()) {
+					continue;
+				}
+				open.add(initiate);
+			}
+			
+			closed.add(open.remove(q));
+			
+			//Make paths for all, setting first one as first for all. (Clone?)
+		}
+		return null;
 	}
 	
 }
