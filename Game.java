@@ -9,11 +9,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -57,6 +59,8 @@ public class Game extends BasicGame{
 	private Bunker b;
 	
 	private int creditDrawing;
+	
+	private int storylineProgress;
 	
 	public Game(String name) {
 		super(name);
@@ -110,8 +114,8 @@ public class Game extends BasicGame{
 	}
 	
 	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
-		MouseHitbox credits = new MouseHitbox(new Vector2f(15, gc.getHeight()-40), new Vector2f(100, gc.getHeight()-10));
-		MouseHitbox credits2 = new MouseHitbox(new Vector2f(15, gc.getHeight()-40), new Vector2f(145, gc.getHeight()-10));
+		MouseHitbox credits = new MouseHitbox(new Vector2f(40, gc.getHeight()-40), new Vector2f(125, gc.getHeight()-10));
+		MouseHitbox credits2 = new MouseHitbox(new Vector2f(40, gc.getHeight()-40), new Vector2f(170, gc.getHeight()-10));
 		if(credits.isClicked(mouseX, mouseY) && currScreen == 0) {
 			currScreen = 4;
 		} else if(credits2.isClicked(mouseX, mouseY) && currScreen != 0) {
@@ -154,13 +158,16 @@ public class Game extends BasicGame{
 					hasClicked = false;
 				}
 			}
-				
+			MouseHitbox dialogue = new MouseHitbox(new Vector2f(40, gc.getHeight()-250), new Vector2f(gc.getWidth()-40, gc.getHeight()-50));
+			if(dialogue.isClicked(mouseX, mouseY)) {
+				storylineProgress++;
+			}
 			
 			for(int i = 0; i<shop.length; i++) {
 				for(int j = 0; j<shop[i].length; j++) {
 					Vector2f[] tlbr = turretShop.iconHitbox(i, j);
 					MouseHitbox clickedIcon = new MouseHitbox(tlbr[0], tlbr[1]);
-					
+					 
 					//This sets the clicked turret as the "clicked" or selected turret for placement
 					if(clickedIcon.isClicked(mouseX, mouseY)) {
 						clicked = turretShop.getTurret(i, j);
@@ -169,6 +176,8 @@ public class Game extends BasicGame{
 					}
 				}
 			}
+			
+			
 			
 			//Stub, add stuff here for more things
 		}
@@ -297,10 +306,15 @@ public class Game extends BasicGame{
 					}	//.............. etc.
 				}
 			}
+			
+			g.drawRect(40, gc.getHeight()-250, gc.getWidth()-80, 200);
+			//TODO add tutorial text in DialogueCollection.getDialogue(storylineProgress);
+			makeItFit(DialogueCollection.getDialogue(storylineProgress), 50, gc.getHeight()-240, gc.getWidth()-100, g);
 		
 			if(hasClicked) {
 				clicked.getDesign().getDesign().draw(mouseX, mouseY);
 			}
+			
 		}
 		
 		//Credit page layout
@@ -330,14 +344,32 @@ public class Game extends BasicGame{
 		//Links to the main menu and credit screens
 		if(currScreen == 0) {
 			g.setColor(Color.black);
-			g.drawRect(15, gc.getHeight()-40, 85,  30);
-			g.drawString("Credits", 20, gc.getHeight()-40);
+			g.drawRect(40, gc.getHeight()-40, 85,  30);
+			g.drawString("Credits", 45, gc.getHeight()-40);
 		} else {
 			g.setColor(Color.black);
-			g.drawRect(15, gc.getHeight() - 40, 130, 30);
-			g.drawString("Main Menu", 20, gc.getHeight()-40);
+			g.drawRect(40, gc.getHeight() - 40, 130, 30);
+			g.drawString("Main Menu", 45, gc.getHeight()-40);
 		}
 		
+	}
+	
+	public void makeItFit(String s, int x, int y, int w, Graphics g) {
+		Scanner scan = new Scanner(s);
+		int totalHeight = 0;
+		int totalLength = 0;
+		while(scan.hasNext()) {
+			String nextWord = scan.next()+" ";
+			int wLength = g.getFont().getWidth(nextWord);
+			if(totalLength+wLength<w) {
+				totalLength+=wLength;
+			} else {
+				totalHeight++;
+				totalLength = wLength;
+			}
+			g.drawString(nextWord, x+totalLength-wLength, y+totalHeight*g.getFont().getHeight(nextWord));
+		}
+		scan.close();
 	}
 	
 	public static void main(String[] args) {
