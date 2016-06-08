@@ -1,0 +1,38 @@
+package main;
+
+public class DialogueCollection {
+	DialogueCollection() {
+		
+	}
+	
+	public static String getDialogue(int num) {
+		if(num == 0) {
+			return "Welcome to the tutorial! (Click this box to progress)";
+		}
+		if(num == 1) {
+			return "There has been an infestation, and we need you to defend our home! (Click this box to progress)";
+		}
+		if(num == 2) {
+			return "To get you started we forwarded $200 to your account! (Click this box to progress)";
+		}
+		if(num == 3) {
+			return "First click on a turret to fight off the intruders, then click where you want to place it! (Click this box to progress)";
+		}
+		if(num == 4) {
+			return "Red turrets do high damage at low range, Yellow do damage over an area, and Blue have high range, but the lower damage output. (Click this box to progress)";
+		}
+		if(num == 5) {
+			return "As you kill intruders we will reward you with small bounties to reward you! (Click this box to progress)";
+		}
+		if(num == 6) {
+			return "Our turrets are top of the line, however since we left them in the shop you will have to pay for them. Don’t worry, we will pay you back in full if we live! (Click this box to progress)";
+		}
+		if(num == 7) {
+			return "Thank goodness you came when you did, I think I see a wave of enemies coming! (Click this box to progress)";
+		}
+		if(num == 8) {
+			return "I would help, but that would require leaving the bunker, so good luck! (Click this box to progress)";
+		}
+		return null;
+	}
+}
