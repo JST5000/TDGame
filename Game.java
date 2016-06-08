@@ -34,24 +34,6 @@ public class Game extends BasicGame{
 	
 	private Icon logo;
 	
-	private Icon blue1;
-	
-	private Icon red1;
-	
-	private Icon yellow1;
-	
-	private Icon blue2;
-	
-	private Icon red2;
-	
-	private Icon yellow2;
-	
-	private Icon blue3; 
-	
-	private Icon red3;
-	
-	private Icon yellow3; 
-	
 	private Turret clicked;
 	
 	private float totalTime;
@@ -74,6 +56,8 @@ public class Game extends BasicGame{
 	
 	private Bunker b;
 	
+	private int creditDrawing;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
@@ -94,28 +78,6 @@ public class Game extends BasicGame{
 			playGame = new Icon(new Image(t1), new Vector2f( 50, 50));
 			Texture tHardcoreLemon = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/hardcoreLemon.jpg")));
 			this.logo = new Icon(new Image(tHardcoreLemon), new Vector2f(400, 300));
-			
-			//Texture tyellow1= TextureLoader.getTexture ("jpg", new FileInputStream(new File("")));
-			//yellow1=new Icon (new Image(tyellow1), new Vector2f(50,75));
-			//Texture tred1= TextureLoader.getTexture ("jpg", new FileInputStream(new File("")));
-			//red1=new Icon (new Image(tred1), new Vector2f(50,100));
-			//Texture tblue1= TextureLoader.getTexture ("jpg", new FileInputStream(new File("")));
-			//blue1=new Icon (new Image(tblue1), new Vector2f(50,125));
-			
-			//Texture tyellow2=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//yellow2=new Icon (new Image(tyellow2), new Vector2f(50,150));
-			//Texture tred2=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//red2=new Icon (new Image(tred2), new Vector2f(50,175));
-			//Texture tblue2=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//blue2=new Icon (new Image(tblue2), new Vector2f(50,200));
-			
-			//Texture tyellow3=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//yellow3=new Icon (new Image(tyellow3), new Vector2f(75,50));
-			//Texture tred3=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//red3=new Icon (new Image(tred3), new Vector2f(75,75));
-			//Texture tblue3=TextureLoader.getTexture("jpg", new FileInputStream(new File("")));
-			//blue3=new Icon (new Image(tblue3), new Vector2f(75,100));
-			//files are on github, add your own path
 		}
 		
 		 catch (FileNotFoundException e) {
@@ -137,25 +99,9 @@ public class Game extends BasicGame{
 		//Used so that the in game things only initialize once.
 		thereCanOnlyBeONE = false;
 		
-		// creating all the turrets (need icons added)
-		//red1Turret=new redTurret(new Vector2f(1,1), false, red1);
-		//yellow1Turret=new yellowTurret(new Vector2f(1,2), false, yellow1);
-		//blue1Turret=new blueTurret(new Vector2f(1,3), false, blue1);
 		
-		//
 		//turretShop initialization
 		turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
-		
-		//turretShpp.addIcon(1,1,red1);
-		//turretShop.addIcon(1,2,yellow1);
-		//turretShop.addIcon(1,3,blue1);
-		//turretShop.addIcon(2,1,red2);
-		//turretShop.addIcon(2,2,yellow2);
-		//turretShop.addIcon(2,3,blue2);
-		//turretShop.addIcon(3,1,red3);
-		//turretShop.addIcon(3,2,yellow3);
-		//turretShop.addIcon(3,3,blue3);
-	
 		for(int i = 0; i<4; i++) {
 			for(int j = 0; j<4; j++) {
 				turretShop.addIcon(i, j, playGame);
@@ -170,6 +116,20 @@ public class Game extends BasicGame{
 			currScreen = 4;
 		} else if(credits2.isClicked(mouseX, mouseY) && currScreen != 0) {
 			currScreen = 0;
+			creditDrawing = 0;
+		}
+		//If on credit screen
+		if(currScreen == 4) {
+			//Checks to see if it should display Marlena's easter egg
+			MouseHitbox lenaDrawing = new MouseHitbox(new Vector2f(gc.getWidth()/2-90, gc.getHeight()/2+30), new Vector2f(gc.getWidth()/2+90, gc.getHeight()/2+55));
+			if(lenaDrawing.isClicked(mouseX, mouseY)) {
+				creditDrawing = 2;
+			}
+			//Checks to see if it should display Jackson's easter egg
+			MouseHitbox jacksonDrawing = new MouseHitbox(new Vector2f(gc.getWidth()/2 - 100, gc.getHeight()/2+60), new Vector2f(gc.getWidth()/2 + 100, gc.getHeight()/2+85));
+			if(jacksonDrawing.isClicked(mouseX, mouseY)) {
+				creditDrawing = 3;
+			}
 		}
 		
 		if(currScreen == 0) {
@@ -354,6 +314,17 @@ public class Game extends BasicGame{
 			g.drawString("Marlena Rehder,", gc.getWidth()/2-90, gc.getHeight()/2+30);
 			g.drawString("And Jackson Mills!", gc.getWidth()/2 - 100, gc.getHeight()/2+60);
 			g.drawString("June, 2016", gc.getWidth()/2 - 65, gc.getHeight()/2 + 200);
+			if(creditDrawing == 2) {
+					DrawingCollection.lenaDrawing(g);
+			} else if(creditDrawing == 3) {
+				try {
+					DrawingCollection.jacksonDrawing(g);
+				} catch (IOException e) {
+					System.out.println("Hey, JacksonDrawing messed up...");
+					e.printStackTrace();
+					
+				}
+			}
 		}
 		
 		//Links to the main menu and credit screens
