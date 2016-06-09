@@ -30,6 +30,8 @@
       
       private int reward;//reward per enemy
    
+      private boolean alive; //whether enemy is alive or no
+      
     //makes an enemy with the traits specified
       public Enemy(boolean canFly, int hp, int atk, int def, Vector2f loc, Vector2f vel, Vector2f size, Icon img, int reward) {
          this.canFly = canFly;
@@ -41,6 +43,7 @@
          this.size = size;
          this.img = img;
          this.reward=reward;
+         alive=true;
       }
    
     //Creates grid at location
@@ -50,6 +53,9 @@
 			{
          img.getDesign().draw(loc.x, loc.y);
 			}
+		else{
+			alive=false;
+		}
       }
    
       public void hit(int damage)
@@ -84,6 +90,10 @@
       public Vector2f findLocation()
       {
          return loc;
+      }
+      
+      public boolean isAlive(){
+      	return alive;
       }
    
       public Icon img()
