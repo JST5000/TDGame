@@ -209,7 +209,7 @@ public class Game extends BasicGame{
 			thereCanOnlyBeONE = true;
 		}
 			
-		
+		//Not being used, but keep this in and commented for the time being.
 		//TODO All of the wave stuffs
 		/*if(waveIncoming) {
 			//This would return true 1 time before changing to false for each wave (init for waves)
