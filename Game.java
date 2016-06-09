@@ -221,6 +221,7 @@ public class Game extends BasicGame{
 			}
 			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
 			for(Enemy e: waveEnemies) {
+				
 				e.move(milli);
 				e.render();
 			}
@@ -287,7 +288,7 @@ public class Game extends BasicGame{
 						//Draw wall
 					} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
 					//	Turret t1 = new Turret(new Vector2f(i*gameGrid.getSize().x/gameGrid.getGrid().length, j*gameGrid.getSize().y/gameGrid.getGrid()[i].length),
-						//		true, 1, 3, false, playGame, 3, 50);
+						//		true, 1, 3, false, playGame, 3);
 						//Draw Turret type 1
 					} else if(gameGrid.getGrid()[i][j] == 4 /*Second Turret ID*/) {
 						//Draw Turret type 2
