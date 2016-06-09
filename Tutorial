@@ -20,6 +20,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 public class Tutorial
 {
     //getpath uses grid locations, not pixel locations
+    //Does Vector2f use grid locations or pixel locations?
     Vector2f startingLoc = new Vector2f(0, 8);
     Vector2f endingLoc = new Vector2f(8, 8);
     ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
