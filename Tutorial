@@ -19,6 +19,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Tutorial
 {
+    //getpath uses grid locations, not pixel locations
     Vector2f startingLoc = new Vector2f(0, 8);
     Vector2f endingLoc = new Vector2f(8, 8);
     ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
@@ -27,16 +28,25 @@ public class Tutorial
     Icon img = new Icon(new Image(Elfy), new Vector2f(30, 30));
     Vector2f loc = new Vector2f(50, 75);
     Vector2f vel = new Vector2f(0, 0);
-    Vector2f size = new Vector2f(30, 30);
-    Enemy e = new HouseElf(loc, vel, size, img);
+    Vector2f size = new Vector2f(1, 1);
+    
     Waypoint way = gr.getPath(startingLoc, endingLoc);
+    
+    //Stores all the waypoints in the path in an arraylist
     while(way.hasParent())
     {
     	Waypoint parent = way.getParent();
+    	locs.add(parent);
     	way = parent;
     }
     
-    e.render();
-    
-    
+    int count = 0;
+    int length = locs.size();
+    for(int i = length; i = 0; i--)
+    {
+        Enemy e = new HouseElf(loc, vel, size, img);
+        Vector2f wayloc = locs.get(i).getLoc();
+        loc = e.getDirection(loc, wayloc);
+        e.render();
+    }
 }
