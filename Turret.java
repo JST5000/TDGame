@@ -1,5 +1,6 @@
 package playerObjects;
 
+import org.newdawn.slick.Graphics;
 import org.lwjgl.util.vector.Vector2f;
 
 public class Turret {
@@ -29,7 +30,7 @@ public class Turret {
 	Icon design;
 	
 	//Sets the fields to the given values
-	Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i) {
+	Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i, int atkSpd) {
 		locationA = l;
 		canHitFlying = canFly;
 		atk = a;
@@ -37,6 +38,7 @@ public class Turret {
 		this.aoe = aoe;
 		design = i;
 		firedLast = 0;
+		this.atkSpd=atkSpd;
 	}
 	
 	//This section returns fields
@@ -66,15 +68,23 @@ public class Turret {
 		return canHitFlying;
 	}
 	//End of field return section
+	//draw the turret on the screen with input
+	public void draw(Graphics g, int x, int y){
+		g.drawImage(Turret.getDesign(), x, y);
+	}
 	
-	public void attack(Icon bullet, int milli/*, Enemy e*/) {
+	public void attack(Icon bullet, int milli, Enemy e) {
 		//TODO: Copy Enemy.java from computer at school
 		float time = System.currentTimeMillis();
 		if(time-firedLast > atkSpd*1000) { 
 			//This makes a bullet that targets an enemy trying to kill them by staying locked
 			//Bullets explode on collision normally regardless of target
-			//Bullet b = new Bullet(bullet, atk/*, e*/);
+			Bullet b = new Bullet(bullet, atk, e);
 			//TODO Make the bullet follow the target (Enemy e)
+			Vector2f enemyLoc=e.findLocation();
+			int enemyX=enemyLoc.getX();
+			int enemyY=enemyLoc.getY();
+			
 			//Fired last ensures the atkSpd gates the turret's damage
 			firedLast = time;
 		}
