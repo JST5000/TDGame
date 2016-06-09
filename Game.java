@@ -62,9 +62,14 @@ public class Game extends BasicGame{
 	
 	private int storylineProgress;
 	
+	//Not sure if this is correct
+	private int level;
+	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
+		//Not sure if this is correct
+		level = 0;
 	}
 	
 	//Initializes all the necessary values for the main screen and general properties
@@ -211,6 +216,12 @@ public class Game extends BasicGame{
 			
 		//Not being used, but keep this in and commented for the time being.
 		//TODO All of the wave stuffs
+		//Not sure if this is correct
+		if(level != 0)
+		{
+			tutorial(milli);
+		}
+		
 		/*if(waveIncoming) {
 			//This would return true 1 time before changing to false for each wave (init for waves)
 			if(wave.isStarting) {
