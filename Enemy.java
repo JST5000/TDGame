@@ -128,5 +128,20 @@
          return up;
       }
    }
+   public void move()
+   {
+   	if(loc.y != 8)
+   	{
+   		loc.y += 1;	
+   	}
+   	else if(loc.x > 8)
+   	{
+   		loc.x -= 1;
+   	}
+   	else
+   	{
+   		loc.x += 1;
+   	}
+   }
 
    }
