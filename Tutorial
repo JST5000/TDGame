@@ -68,7 +68,7 @@ public void tutorial(int milli)
     */
     
     
-    loc = loc.scale(milli/1000);
+    //loc = loc.scale(milli/1000);
     
     
     
