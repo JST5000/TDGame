@@ -25,6 +25,7 @@ public class Tutorial
     
     //Array containing all outside grids in Vector2f form, and array of 16 murderous house elves
     Vector2f[] edges = new Vector2f[60];
+    //Adds locations to array
     for(int i = 0; i < 16; i++)
     {
       edges[i] = new Vector2f(i, 0);
