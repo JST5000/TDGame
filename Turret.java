@@ -93,7 +93,7 @@ public class Turret {
 		g.drawImage(Turret.getDesign(), x, y);
 	}
 	
-	public void attack(Icon bullet, int milli, Enemy e) {
+	public void attack(Icon bullet, Enemy e) {
 		//TODO: Copy Enemy.java from computer at school
 		float time = System.currentTimeMillis();
 		if(time-firedLast > atkSpd) { 
@@ -101,14 +101,14 @@ public class Turret {
 			//Bullets explode on collision normally regardless of target
 			Bullet b = new Bullet(bullet, atk, e, location);//gives the bullet an origin in pixels
 			//TODO Make the bullet follow the target (Enemy e)
-			//done yo I think; the bullet needs to update though and not sure how? 
 			boolean hit= b.underFire();//checks if the bullet hit anything
 			if(hit){
-				e.hit(b.getDamage);//if enemy is dead, returns money;
-				if(! (e.isAlive()) ){
+				e.hit(b.getDamage);//reduces the enemy hp
+				if(! (e.isAlive()) ){//checks if the enemy is dead
 					money=e.getMoney();
 				}
 			}
+			b.update(time);
 			
 			
 			//Fired last ensures the atkSpd gates the turret's damage
