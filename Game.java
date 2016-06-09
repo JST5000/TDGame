@@ -62,6 +62,9 @@ public class Game extends BasicGame{
 	
 	private int storylineProgress;
 	
+	private ArrayList[] <Turret> allTurrets;
+	
+	private Icon bulletIcon;
 	//Not sure if this is correct
 	private int level;
 	
@@ -70,6 +73,7 @@ public class Game extends BasicGame{
 		totalTime = 0;
 		//Not sure if this is correct
 		level = 0;
+	
 	}
 	
 	//Initializes all the necessary values for the main screen and general properties
@@ -79,7 +83,7 @@ public class Game extends BasicGame{
 		gc.setShowFPS(false);
 		currScreen = 0;
 		money = 200;
-		
+		allTurrets = new <Turret> ArrayList();
 		
 		
 		try {
@@ -87,6 +91,7 @@ public class Game extends BasicGame{
 			playGame = new Icon(new Image(t1), new Vector2f( 50, 50));
 			Texture tHardcoreLemon = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/hardcoreLemon.jpg")));
 			this.logo = new Icon(new Image(tHardcoreLemon), new Vector2f(400, 300));
+			//need the bullet icon loaded 
 		}
 		
 		 catch (FileNotFoundException e) {
@@ -160,6 +165,7 @@ public class Game extends BasicGame{
 				//If there is nothing there, or just a ghost wall (id 2) make the id of that spot into the turret currently selected.
 				if(gameGrid.getGrid()[x][y] == 0 || gameGrid.getGrid()[x][y] == 2) {
 					gameGrid.change(x, y, clicked.getId());
+					allTurrets.add(clicked);//adds turret to arraylist of those bought
 					hasClicked = false;
 				}
 			}
@@ -228,7 +234,21 @@ public class Game extends BasicGame{
 				for(Enemy e: waveEnemies) {
 					e.setPath(gr.getPath(new Vector2f(/*SPAWN LOCATION*///), new Vector2f(/*GOAL LOCATION*/)); //A* pathfinding
 					/*startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
+					Vector2f enemyLoc= e.getLocation();//gets the location of the enemy in array conversion
+					for(Turret t: allTurrets ){
+						Vector 2f turretLoc=t.getLoc();//gets location of the turret in array conversion
+						int range=t.getRange();
+						int distance = (int) enemyLoc.distance(turretLoc);
+						if (distance <= range){
+							while(distance <= range){
+								t.attack(bulletIcon, e);
+								enemyLoc=e.getLocation();//should keep checking until the enemy passes out of range
+								distance=(int) enemyLoc.distance(turretLoc);
+							}
+						money+= t.getMoney();//adds money if the enemy is killed
+					}
 					
+				
 					
 				}
 			}
