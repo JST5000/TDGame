@@ -27,9 +27,11 @@
       protected Vector2f size;        //Size of enemy
    
       protected Icon img;                //Image for said enemy
+      
+      private int reward;//reward per enemy
    
     //makes an enemy with the traits specified
-      public Enemy(boolean canFly, int hp, int atk, int def, Vector2f loc, Vector2f vel, Vector2f size, Icon img) {
+      public Enemy(boolean canFly, int hp, int atk, int def, Vector2f loc, Vector2f vel, Vector2f size, Icon img, int reward) {
          this.canFly = canFly;
          this.hp = hp;
          this.atk = atk;
@@ -38,6 +40,7 @@
          this.vel = vel;
          this.size = size;
          this.img = img;
+         this.reward=reward;
       }
    
     //Creates grid at location
@@ -46,10 +49,6 @@
 			if(hp > 0)
 			{
          img.getDesign().draw(loc.x, loc.y);
-			}
-			else
-			{
-				//Increases $$
 			}
       }
    
@@ -78,6 +77,10 @@
          return def;
       }
    
+      public int getMoney(){//returns amount of money for killing enemy
+      return reward;
+      }
+      
       public Vector2f findLocation()
       {
          return loc;
