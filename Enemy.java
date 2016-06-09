@@ -89,10 +89,10 @@
       	int b = ((int)one.getY);
       	int c = ((int)two.getX);
 	int d = ((int)two.getY);
-	Vector2f left = new Vector2f(270.0);
-	Vector2f right = new Vector2f(90.0);
-	Vector2f up = new Vector2f(0.0);
-	Vector2f down = new Vector2f(180.0);
+	Vector2f left = new Vector2f((x - 1), y);
+	Vector2f right = new Vector2f((x + 1), y));
+	Vector2f up = new Vector2f(x, (y -1));
+	Vector2f down = new Vector2f(x, (y + 1));
       
 	 if(a > c)
       	 {
