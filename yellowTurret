@@ -3,6 +3,6 @@ import org.newdawn.slick.Image;
 
 public class yellowTurret extends Turret {
   public class yellowTurret(Vector2f l, boolean canFly, Icon i){
-    super (l, canFly, 2, 2, 2, i);
+    super (l, canFly, 2, 2, 2, i,1000);
     }
   }
