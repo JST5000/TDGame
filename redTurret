@@ -10,4 +10,15 @@ public class RedTurret extends Turret{
 	public RedTurret (Vector2f l, boolean canFly, Icon i, int atkSpd){
 	    super(l, canFly, 2, 2, false, i, 1000);
 	}
+	
+	public int upgrade() {
+		if(level == 3) {
+			aoe = true;
+		}
+		atkSpd /= 2;
+		atk *=2;
+		range *= 5/4;
+		return level*level*50;
+		
+	}
 }
