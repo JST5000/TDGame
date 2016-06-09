@@ -46,7 +46,14 @@ public class Tutorial
     int count = 0;
     int length = locs.size();
     
+    Vector2f wayloc = locs.get(i).getLoc();
+    //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
+    loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
+    
+    
     //Moves enemy to the closest waypoint 
+    //Apparently I don't need this?
+    /*
     for(int i = length; i = 0; i--)
     {
         Enemy e = new HouseElf(loc, vel, size, img);
@@ -54,4 +61,5 @@ public class Tutorial
         loc = e.getDirection(loc, wayloc);
         e.render();
     }
+    */
 }
