@@ -25,10 +25,11 @@ public class Tutorial
     ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
     
     Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
-    Icon img = new Icon(new Image(Elfy), new Vector2f(30, 30));
-    Vector2f loc = new Vector2f(50, 75);
-    Vector2f vel = new Vector2f(0, 0);
     Vector2f size = new Vector2f(1, 1);
+    Icon img = new Icon(new Image(Elfy), size);
+    Vector2f loc = startingLoc;
+    Vector2f vel = new Vector2f(0, 0);
+   
     
     Waypoint way = gr.getPath(startingLoc, endingLoc);
     
@@ -42,6 +43,8 @@ public class Tutorial
     
     int count = 0;
     int length = locs.size();
+    
+    //Moves enemy to the closest waypoint 
     for(int i = length; i = 0; i--)
     {
         Enemy e = new HouseElf(loc, vel, size, img);
