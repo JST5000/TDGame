@@ -53,9 +53,9 @@
 			}
       }
    
-      public void hit()
+      public void hit(int damage)
       {
-         hp--;
+         hp=hp-damage;
       }
        
       public boolean canFly()
