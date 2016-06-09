@@ -49,7 +49,7 @@ public class Tutorial
     Vector2f wayloc = locs.get(i).getLoc();
     //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
     loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
-    
+    loc = loc.scale(milli/1000);
     
     //Moves enemy to the closest waypoint 
     //Apparently I don't need this?
