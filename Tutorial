@@ -1,3 +1,4 @@
+package wave;
 import org.lwjgl.input.Mouse;
 
 import java.awt.Font;
@@ -17,26 +18,29 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-public class Tutorial
-{
-public void tutorial(int milli)
+import grid.Waypoint;
+import java.util.*;
+import playerObjects.Icon;
+
+public class Tutorial {
+ static int i = 0;
+
+public static void tutorial(int milli) throws FileNotFoundException, IOException
 {
     //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
     //getpath uses grid locations, not pixel locations
     //Does Vector2f use grid locations or pixel locations?
     Vector2f startingLoc = new Vector2f(0, 8);
-    Vector2f endingLoc = new Vector2f(8, 8);
-    ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
+//    Vector2f endingLoc = new Vector2f(8, 8);
+  //  ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
     
-    Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
+    Texture Elfy = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
     Vector2f size = new Vector2f(1, 1);
-    Icon img = new Icon(new Image(Elfy), size);
+   // Icon img = new Icon(new Image(Elfy), size);
     Vector2f loc = startingLoc;
     Vector2f vel = new Vector2f(0, 0);
    float x = 0;
    float y = 0;
-   for(int i = 0; i < 14; i++)
-   {
     if((i %= 2) == 0)
     {
         y += 1;
@@ -45,8 +49,8 @@ public void tutorial(int milli)
     {
         x += 1;
     }
-   }
-   loc = Vector2f((loc.x + x), (loc.y + y));
+   i++;
+   loc = new Vector2f((loc.x + x), (loc.y + y));
    //Doesn't work because Waypoint is non-functional
     /*
     Waypoint way = gr.getPath(startingLoc, endingLoc);
@@ -68,7 +72,7 @@ public void tutorial(int milli)
     */
     
     
-    //loc = loc.scale(milli/1000);
+  //  loc = loc.scale(milli/1000);
     
     
     
