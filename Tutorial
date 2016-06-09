@@ -20,11 +20,12 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import grid.Waypoint;
 import java.util.*;
-import playerObjects.Icon;
+import playerObjects.*;
 
-public class Tutorial {
+public class Tutorial1 {
  static int i = 0;
-
+static float x = 0;
+static float y = 0;
 public static void tutorial(int milli) throws FileNotFoundException, IOException
 {
     //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
@@ -44,22 +45,20 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     Vector2f loc = startingLoc;
     Vector2f vel = new Vector2f(0, 0);
     Enemy e = new HouseElf(loc, vel, size, img);
-   float x = 0;
-   float y = 0;
-   //while(tot == 1)
-   //{
-   //if((i %= 2) == 0)
-   //{
-   //     y += 1;
-   //}
-   ///else
-   // {
-   //     x += 1;
-    //}
-    //}
-   //i++;
-   loc = new Vector2f((x + 5), loc.y);
-   
+   while(tot > 1)
+   { tot = 0;
+   if((i %= 2) == 0)
+   {
+        y += 1;
+   }
+   else
+   {
+        x += 1;
+    }
+    }
+   i++;
+   e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
+   e.render();
    
    //Doesn't work because Waypoint is non-functional
     /*
