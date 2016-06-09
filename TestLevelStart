@@ -1,0 +1,88 @@
+import org.lwjgl.input.Mouse;
+
+import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+
+public class Tutorial
+{
+    //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
+    //getpath uses grid locations, not pixel locations
+    //Does Vector2f use grid locations or pixel locations?
+    
+    //Array containing all outside grids in Vector2f form, and array of 16 murderous house elves
+    Vector2f[] edges = new Vector2f[60];
+    for(int i = 0; i < 16; i++)
+    {
+      edges[i] = new Vector2f(i, 0);
+    }
+    for(int j = 0; j < 16; j++)
+    {
+      edges[16 + j] = new Vector2f(j, 16);
+    }
+    for(int k = 0; k < 14; k++)
+    {
+      edges[32 + k] = new Vector2f(0, (k + 1));
+    }
+    for(int r = 0; r < 14; r++)
+    {
+      edges[46 + r] = new Vector2f(16, (r + 1));
+    }
+    
+    
+    //Chooses a random point from the outside edges
+    Vector2f startingLoc = edges[((int)(Math.random() * 60))];
+    //Vector2f startingLoc = new Vector2f(0, 8);
+    Vector2f endingLoc = new Vector2f(8, 8);
+    ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
+    
+    Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
+    Vector2f size = new Vector2f(1, 1);
+    Icon img = new Icon(new Image(Elfy), new Vector2f(30, 30));
+    Vector2f loc = startingLoc;
+    Vector2f vel = new Vector2f(0, 0);
+   
+    
+    Waypoint way = gr.getPath(startingLoc, endingLoc);
+    
+    //Stores all the waypoints in the path in an arraylist
+    while(way.hasParent())
+    {
+    	Waypoint parent = way.getParent();
+    	locs.add(parent);
+    	way = parent;
+    }
+    
+    int count = 0;
+    int length = locs.size();
+    
+    Vector2f wayloc = locs.get(i).getLoc();
+    //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
+    loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
+    loc = loc.scale(milli/1000);
+    
+    //Moves enemy to the closest waypoint 
+    //Apparently I don't need this?
+    /*
+    for(int i = length; i = 0; i--)
+    {
+        Enemy e = new HouseElf(loc, vel, size, img);
+        Vector2f wayloc = locs.get(i).getLoc();
+        loc = e.getDirection(loc, wayloc);
+        e.render();
+    }
+    */
+}
