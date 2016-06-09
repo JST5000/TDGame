@@ -30,9 +30,11 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
     //getpath uses grid locations, not pixel locations
     //Does Vector2f use grid locations or pixel locations?
+    
     Vector2f startingLoc = new Vector2f(0, 8);
-//    Vector2f endingLoc = new Vector2f(8, 8);
-  //  ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
+    
+    //Vector2f endingLoc = new Vector2f(8, 8);
+    //  ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
     
     int tot = 0;
     tot += milli;
@@ -44,8 +46,8 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     Enemy e = new HouseElf(loc, vel, size, img);
    float x = 0;
    float y = 0;
-   while(tot == 1)
-   {
+   //while(tot == 1)
+   //{
     if((i %= 2) == 0)
     {
         y += 1;
@@ -54,7 +56,7 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     {
         x += 1;
     }
-    }
+    //}
    i++;
    loc = new Vector2f((loc.x + x), (loc.y + y));
    //Doesn't work because Waypoint is non-functional
