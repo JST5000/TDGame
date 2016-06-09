@@ -19,6 +19,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Tutorial
 {
+    //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
     //getpath uses grid locations, not pixel locations
     //Does Vector2f use grid locations or pixel locations?
     Vector2f startingLoc = new Vector2f(0, 8);
