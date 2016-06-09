@@ -74,7 +74,7 @@
          return def;
       }
    
-      public Vector2f findVector()
+      public Vector2f findLocation()
       {
          return loc;
       }
