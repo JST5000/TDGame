@@ -38,9 +38,10 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     tot += milli;
     Texture Elfy = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
     Vector2f size = new Vector2f(1, 1);
-   // Icon img = new Icon(new Image(Elfy), size);
+    Icon img = new Icon(new Image(Elfy), size);
     Vector2f loc = startingLoc;
     Vector2f vel = new Vector2f(0, 0);
+    Enemy e = new HouseElf(loc, vel, size, img);
    float x = 0;
    float y = 0;
    while(tot == 1)
