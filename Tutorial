@@ -59,7 +59,7 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
    i++;
    e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
    
-   if((e.getLocation().x != 8) || (e.getLocation().y != 8))
+   if((e.getLoc().x <= 8) || (e.getLoc().y <= 8))
    {
        e.render();
    }
