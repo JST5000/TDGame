@@ -34,6 +34,8 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
 //    Vector2f endingLoc = new Vector2f(8, 8);
   //  ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
     
+    int tot = 0;
+    tot += milli;
     Texture Elfy = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
     Vector2f size = new Vector2f(1, 1);
    // Icon img = new Icon(new Image(Elfy), size);
@@ -41,6 +43,8 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     Vector2f vel = new Vector2f(0, 0);
    float x = 0;
    float y = 0;
+   while(tot == 1)
+   {
     if((i %= 2) == 0)
     {
         y += 1;
@@ -48,6 +52,7 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     else
     {
         x += 1;
+    }
     }
    i++;
    loc = new Vector2f((loc.x + x), (loc.y + y));
