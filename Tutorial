@@ -26,13 +26,13 @@ public class Tutorial1 {
  static int i = 0;
 static float x = 0;
 static float y = 0;
-public static void tutorial(int milli) throws FileNotFoundException, IOException
+public static ArrayList<Enemy> tutorial(int milli) throws FileNotFoundException, IOException
 {
     //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
     //getpath uses grid locations, not pixel locations
     //Does Vector2f use grid locations or pixel locations?
     
-    Vector2f startingLoc = new Vector2f(0, 8);
+    Vector2f startingLoc = new Vector2f(40, 40);
     
     //Vector2f endingLoc = new Vector2f(8, 8);
     //  ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
@@ -59,10 +59,12 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
    i++;
    e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
    
-   if((e.getLoc().x <= 300) || (e.getLoc().y <= 300))
+   if((e.getLoc().x <= 290) || (e.getLoc().y <= 290))
    {
        e.render();
    }
+   ArrayList<Enemy> es = new ArrayList<Enemy>();
+   return es;
    
    //Doesn't work because Waypoint is non-functional
     /*
