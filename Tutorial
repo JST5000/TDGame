@@ -58,7 +58,11 @@ public static void tutorial(int milli) throws FileNotFoundException, IOException
     }
    i++;
    e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
-   e.render();
+   
+   if((e.getLocation().x != 8) || (e.getLocation().y != 8))
+   {
+       e.render();
+   }
    
    //Doesn't work because Waypoint is non-functional
     /*
