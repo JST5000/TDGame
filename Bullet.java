@@ -45,7 +45,7 @@ public class Bullet {
 		g.resetTransform();
 	}
 	
-	public void update (int milli){//takes time passed as a parameter (not sure if this works at all)
+	public void update (int milli){ //takes time passed as a parameter (not sure if this works at all)
 		if(lifespan>MAX_LIFETIME){
 			alive=false;
 		}
@@ -58,8 +58,8 @@ public class Bullet {
 			int oX=(int)location.getX();
 			int oY=(int)location.getY();
 			Vector2f whereDoIGo=(eX-oX,eY-oY);//should create a vector betwen the origin and the enemy. 
-			addSpeed=whereDoIGo.scale(milli/1000);//should scale the new vector with the amount of time passed
-			location.add(addSpeed);//should add the two vectors to get a new position
+			location=new Vector2f(whereDoIGo.getX() +10, whereDoIGo.getY() +10);//adds speed to the new direction vector 
+			
 			lifespan+=milli;
 			
 			//checks for collisions
