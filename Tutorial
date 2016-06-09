@@ -33,8 +33,22 @@ public void tutorial(int milli)
     Icon img = new Icon(new Image(Elfy), size);
     Vector2f loc = startingLoc;
     Vector2f vel = new Vector2f(0, 0);
-   
-    
+   float x = 0;
+   float y = 0;
+   for(int i = 0; i < 14; i++)
+   {
+    if((i %= 2) == 0)
+    {
+        y += 1;
+    }
+    else
+    {
+        x += 1;
+    }
+   }
+   loc = Vector2f((loc.x + x), (loc.y + y));
+   //Doesn't work because Waypoint is non-functional
+    /*
     Waypoint way = gr.getPath(startingLoc, endingLoc);
     
     //Stores all the waypoints in the path in an arraylist
@@ -51,7 +65,12 @@ public void tutorial(int milli)
     Vector2f wayloc = locs.get(i).getLoc();
     //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
     loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
+    */
+    
+    
     loc = loc.scale(milli/1000);
+    
+    
     
     //Moves enemy to the closest waypoint 
     //Apparently I don't need this?
