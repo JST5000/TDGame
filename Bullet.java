@@ -14,6 +14,7 @@ public class Bullet {
 	public static int MAX_LIFETIME;//cap on how long the bullet could possibly exist
 	private Vector2f origin;//where the turret is; where the bullet originates
 	boolean hit;//whether the bullet has hit anything
+	boolean aoe;//the aoe of the bullet
 	
 	Bullet(Icon b, int atk, Enemy e, Vector2f location) {//add enemy as a parameter to lock onto, adds location (which should be the turret)
 		bullet = b;
@@ -64,13 +65,23 @@ public class Bullet {
 			//checks for collisions
 			int bX=location.getX();
 			int bY=location.getY();
-			
-			if(((bX-eX)>=13) && ((bX-eX) >= -14)){
-				if(((bY-eY) <= 14) && (bY-eY > -14)){
-					alive=false;//removes the bullet
-					//says that the enemy has been hit
-					hit=true;
+			if(!aoe){
+				if(((bX-eX)>=14) && ((bX-eX) >= -14)){
+					if(((bY-eY) <= 14) && (bY-eY > -14)){
+						alive=false;//removes the bullet
+						//says that the enemy has been hit
+						hit=true;
+					}
 				}
+			}
+			else{//currently aoe increases area of effect by 2 because I'm lazy
+				if(((bX-eX)>=28) && ((bX-eX) >= -28)){
+					if(((bY-eY) <= 28) && (bY-eY > -28)){
+						alive=false;//removes the bullet
+						//says that the enemy has been hit
+						hit=true;
+					}
+				}	
 			}
 			
 		}
