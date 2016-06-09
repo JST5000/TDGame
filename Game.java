@@ -217,6 +217,8 @@ public class Game extends BasicGame{
 				for(Enemy e: waveEnemies) {
 					e.setPath(gr.getPath(new Vector2f(/*SPAWN LOCATION*///), new Vector2f(/*GOAL LOCATION*/)); //A* pathfinding
 					/*startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
+					
+					
 				}
 			}
 			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
