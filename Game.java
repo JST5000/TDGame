@@ -235,6 +235,7 @@ public class Game extends BasicGame{
 					e.setPath(gr.getPath(new Vector2f(/*SPAWN LOCATION*///), new Vector2f(/*GOAL LOCATION*/)); //A* pathfinding
 					/*startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
 					Vector2f enemyLoc= e.getLocation();//gets the location of the enemy in array conversion
+				
 					for(Turret t: allTurrets ){
 						Vector 2f turretLoc=t.getLoc();//gets location of the turret in array conversion
 						int range=t.getRange();
