@@ -47,6 +47,10 @@
 			{
          img.getDesign().draw(loc.x, loc.y);
 			}
+			else
+			{
+				//Increases $$
+			}
       }
    
       public void hit()
