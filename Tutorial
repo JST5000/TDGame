@@ -19,19 +19,24 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Tutorial
 {
-    float vx = 1;
-    float vy = 1;
-    ArrayList<Vector2f> path = new ArrayList<Vector2f>();
-    //8, 8
     Vector2f startingLoc = new Vector2f(0, 8);
     Vector2f endingLoc = new Vector2f(8, 8);
-    gr.getPath(startingLoc, endingLoc);
-    
+    ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
     
     Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
-	 Icon img = new Icon(new Image(Elfy), new Vector2f(30, 30));
+    Icon img = new Icon(new Image(Elfy), new Vector2f(30, 30));
     Vector2f loc = new Vector2f(50, 75);
     Vector2f vel = new Vector2f(0, 0);
     Vector2f size = new Vector2f(30, 30);
-    Enemy a = new HouseElf(loc, vel, size, img);
+    Enemy e = new HouseElf(loc, vel, size, img);
+    Waypoint way = gr.getPath(startingLoc, endingLoc);
+    while(way.hasParent())
+    {
+    	Waypoint parent = way.getParent();
+    	way = parent;
+    }
+    
+    e.render();
+    
+    
 }
