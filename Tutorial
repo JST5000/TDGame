@@ -19,7 +19,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Tutorial
 {
-public void tutorial(milli)
+public void tutorial(int milli)
 {
     //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
     //getpath uses grid locations, not pixel locations
