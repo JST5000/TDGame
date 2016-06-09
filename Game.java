@@ -386,6 +386,54 @@ public class Game extends BasicGame{
 		scan.close();
 	}
 	
+	//Not sure if this is correct
+	public void tutorial(milli)
+	{
+    //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
+    //getpath uses grid locations, not pixel locations
+    //Does Vector2f use grid locations or pixel locations?
+    Vector2f startingLoc = new Vector2f(0, 8);
+    Vector2f endingLoc = new Vector2f(8, 8);
+    ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
+    
+    Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
+    Vector2f size = new Vector2f(1, 1);
+    Icon img = new Icon(new Image(Elfy), size);
+    Vector2f loc = startingLoc;
+    Vector2f vel = new Vector2f(0, 0);
+   
+    
+    Waypoint way = gr.getPath(startingLoc, endingLoc);
+    
+    //Stores all the waypoints in the path in an arraylist
+    while(way.hasParent())
+    {
+    	Waypoint parent = way.getParent();
+    	locs.add(parent);
+    	way = parent;
+    }
+    
+    int count = 0;
+    int length = locs.size();
+    
+    Vector2f wayloc = locs.get(i).getLoc();
+    //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
+    loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
+    loc = loc.scale(milli/1000);
+    
+    //Moves enemy to the closest waypoint 
+    //Apparently I don't need this?
+    /*
+    for(int i = length; i = 0; i--)
+    {
+        Enemy e = new HouseElf(loc, vel, size, img);
+        Vector2f wayloc = locs.get(i).getLoc();
+        loc = e.getDirection(loc, wayloc);
+        e.render();
+    }
+    */
+}
+	
 	public static void main(String[] args) {
 		try{
 			Game TD = new Game("Tower Defense");
