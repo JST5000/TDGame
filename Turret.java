@@ -30,7 +30,7 @@ public class Turret {
 	Icon design;
 	
 	//Sets the fields to the given values
-	Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i, int atkSpd) {
+	Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i, int atkSpd)//atkSpd in milli {
 		locationA = l;
 		canHitFlying = canFly;
 		atk = a;
@@ -76,14 +76,12 @@ public class Turret {
 	public void attack(Icon bullet, int milli, Enemy e) {
 		//TODO: Copy Enemy.java from computer at school
 		float time = System.currentTimeMillis();
-		if(time-firedLast > atkSpd*1000) { 
+		if(time-firedLast > atkSpd) { 
 			//This makes a bullet that targets an enemy trying to kill them by staying locked
 			//Bullets explode on collision normally regardless of target
 			Bullet b = new Bullet(bullet, atk, e);
 			//TODO Make the bullet follow the target (Enemy e)
-			Vector2f enemyLoc=e.findLocation();
-			int enemyX=enemyLoc.getX();
-			int enemyY=enemyLoc.getY();
+		
 			
 			//Fired last ensures the atkSpd gates the turret's damage
 			firedLast = time;
