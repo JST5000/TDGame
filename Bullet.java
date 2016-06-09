@@ -53,14 +53,14 @@ public class Bullet {
 			//moves the bullet
 			Vector2f addSpeed=speed;
 			Vector2f eLocation=e.getLocation;
-			int eX=eLocation.getX();
-			int eY=eLocation.getY();
-			int oX=origin.getX();
-			int oY=origin.getY();
+			int eX=(int)eLocation.getX();
+			int eY=(int)eLocation.getY();
+			int oX=(int)location.getX();
+			int oY=(int)location.getY();
 			Vector2f whereDoIGo=(eX-oX,eY-oY);//should create a vector betwen the origin and the enemy. 
-			addSpeed=whereDoIGo.scale(millis/1000);//should scale the new vector with the amount of time passed
+			addSpeed=whereDoIGo.scale(milli/1000);//should scale the new vector with the amount of time passed
 			location.add(addSpeed);//should add the two vectors to get a new position
-			lifespan+=millis;
+			lifespan+=milli;
 			
 			//checks for collisions
 			int bX=location.getX();
