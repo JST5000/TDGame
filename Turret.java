@@ -32,6 +32,8 @@ public class Turret {
 	
 	private int money;//amount of money gained from attacks
 	
+	private int id;//id number
+	
 	//This is the image that represents the turret for in game
 	Icon design;
 	
@@ -82,7 +84,7 @@ public class Turret {
 	
 	public int getMoney(){
 		int money2=money;
-		money=0;
+		money=0;//clears money so you don't get rewarded increasing amounts of money per kill
 		return money2();
 	}
 	//End of field return section
@@ -102,7 +104,7 @@ public class Turret {
 			//done yo I think; the bullet needs to update though and not sure how? 
 			boolean hit= b.underFire();//checks if the bullet hit anything
 			if(hit){
-				e.hit(b.getDamage);
+				e.hit(b.getDamage);//if enemy is dead, returns money;
 				if(! (e.isAlive()) ){
 					money=e.getMoney();
 				}
