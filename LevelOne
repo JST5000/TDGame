@@ -1,0 +1,63 @@
+package wave;
+import org.lwjgl.input.Mouse;
+
+import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+
+import grid.Waypoint;
+import java.util.*;
+import playerObjects.*;
+
+public class LevelOne {
+static int i = 0;
+static float x = 0;
+static float y = 0;
+public static ArrayList<Enemy> levelOne(int milli) throws FileNotFoundException, IOException
+{
+    Vector2f startingLoc = new Vector2f(40, 40);
+    int tot = 0;
+    tot += milli;
+    
+    Texture Elfy = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
+    Vector2f size = new Vector2f(1, 1);
+    Icon img = new Icon(new Image(Elfy), size);
+    Vector2f loc = startingLoc;
+    Vector2f vel = new Vector2f(0, 0);
+    Enemy e = new HouseElf(loc, vel, size, img);
+    while(tot > 1)
+    { tot = 0;
+      if((i %= 2) == 0)
+      {
+          y += 1;
+      }
+      else
+      {
+        x += 1;
+      }
+    }
+   i++;
+   e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
+   
+   if((e.getLoc().x <= 290) || (e.getLoc().y <= 290))
+   {
+       e.render();
+   }
+   //What does this do?
+   ArrayList<Enemy> es = new ArrayList<Enemy>();
+   return es;
+  }
+}
