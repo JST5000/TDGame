@@ -1,13 +1,13 @@
 package playerObjects;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Bullet {
 	private Icon bullet;//design of the bullet
 	private int atk;//damage the bullet does
-	private enemy e;//homing on enemy
-	private Vector2f speed;//how fast the bullet travels
+	private Enemy e;//homing on enemy
 	private boolean alive;//whether the bullet is still functional
 	private Vector2f location;//where the bullet is 
 	private int lifespan;//how long the bullet has been alive, to avoid rendering it too long
@@ -20,7 +20,6 @@ public class Bullet {
 		bullet = b;
 		this.atk = atk;
 		this.e=e;
-		speed=new Vector2f(10,10);//dummy vector
 		alive=true;
 		this.location=location;
 		lifespan=0;
@@ -30,10 +29,10 @@ public class Bullet {
 	
 	public void draw(Graphics g, Vector2f locationP, int angle) {
 		
-		origin=new Vector2f=locationP;
+		origin=locationP;
 		//This draws the bullet and rotates it on its corner before drawing the object
 		//At the location it is supposed to be at.
-		g.rotate(locationP.getX(), locationP.getY(), angle);
+		//g.rotate(locationP.getX(), locationP.getY(), angle);
 	
 		//Makes the image the same size as the size vector
 		g.scale(bullet.getDesign().getWidth()/bullet.getSize().getX(), bullet.getDesign().getHeight()/bullet.getSize().getY());
@@ -51,20 +50,19 @@ public class Bullet {
 		}
 		if(alive){
 			//moves the bullet
-			Vector2f addSpeed=speed;
-			Vector2f eLocation=e.getLocation;
+			Vector2f eLocation=e.getLoc();
 			int eX=(int)eLocation.getX();
 			int eY=(int)eLocation.getY();
 			int oX=(int)location.getX();
 			int oY=(int)location.getY();
-			Vector2f whereDoIGo=(eX-oX,eY-oY);//should create a vector betwen the origin and the enemy. 
+			Vector2f whereDoIGo=new Vector2f(eX-oX,eY-oY);//should create a vector betwen the origin and the enemy. 
 			location=new Vector2f(whereDoIGo.getX() +10, whereDoIGo.getY() +10);//adds speed to the new direction vector 
-			
+			location = location.add(whereDoIGo.scale((float)milli/1000));
 			lifespan+=milli;
 			
 			//checks for collisions
-			int bX=location.getX();
-			int bY=location.getY();
+			int bX=(int)location.getX();
+			int bY=(int)location.getY();
 			if(!aoe){
 				if(((bX-eX)>=14) && ((bX-eX) >= -14)){
 					if(((bY-eY) <= 14) && (bY-eY > -14)){
@@ -89,13 +87,17 @@ public class Bullet {
 	}
 	
 	public void render(GameContainer gc, Graphics g){
-		g.drawImage(bullet.getImage, location.getx(), location.getY());
+		g.drawImage(bullet.getDesign(), location.getX(), location.getY());
 		
 		
 	}
 	
 	public boolean underFire() {//returns whether a collision has occured with an enemy
 		return hit;
+	}
+	
+	public boolean isAlive() {
+		return alive;
 	}
 	
 	public Vector2f getLocation(){//returns the location vector for hitboxes
