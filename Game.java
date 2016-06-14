@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.newdawn.slick.AppGameContainer;
@@ -24,17 +25,28 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import playerObjects.Bullet;
 import playerObjects.Enemy;
 import playerObjects.Icon;
 import playerObjects.Shop;
 import playerObjects.Turret;
+import turrets.BlueTurret;
+import turrets.RedTurret;
+import turrets.YellowTurret;
+import wave.*;
 import grid.MouseHitbox;
 
 public class Game extends BasicGame{
 	
+	private int milli;
+	
+	private boolean waveIncoming = false;
+	
 	private Icon playGame;
 	
 	private Icon logo;
+	
+	private ArrayList<Turret> turrets;
 	
 	private Turret clicked;
 	
@@ -50,11 +62,11 @@ public class Game extends BasicGame{
 	
 	private Grid gameGrid;
 	
-	private boolean hasClicked;
+	private boolean hasClicked = false;
 	
 	private boolean thereCanOnlyBeONE;
 	
-	private int money;
+	private int money=200;
 	
 	private Bunker b;
 	
@@ -62,37 +74,77 @@ public class Game extends BasicGame{
 	
 	private int storylineProgress;
 	
-	private ArrayList[] <Turret> allTurrets;
+	private Image  blueTurretImg;
 	
-	private Icon bulletIcon;
-	//Not sure if this is correct
-	private int level;
+	private Image redTurretImg;
+	
+	private Image yellowTurretImg;
+	
+	private Icon bunker;
+	
+	private Turret  blueTurret;
+	
+	private Turret redTurret;
+	
+	private Turret yellowTurret;
+	
+	private int mouse2X;
+	
+	private int mouse2Y;
+	
+	private ArrayList<Enemy> waveEnemies = new ArrayList<Enemy>();
+	
+	private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	
+	private Icon bullet1;
+	
+	private int time;
+	
+	private int waveCounter = 1;
 	
 	public Game(String name) {
 		super(name);
 		totalTime = 0;
-		//Not sure if this is correct
-		level = 0;
-	
 	}
 	
 	//Initializes all the necessary values for the main screen and general properties
 	public void init(GameContainer gc) {
 		//This limits the computer processing power cost
 		gc.setTargetFrameRate(60);
-		gc.setShowFPS(false);
+	    gc.setMinimumLogicUpdateInterval(26);
+	    gc.setMaximumLogicUpdateInterval(26);
 		currScreen = 0;
 		money = 200;
-		allTurrets = new <Turret> ArrayList();
+		waveIncoming = false;
 		
 		
 		try {
+			
+			turrets = new ArrayList<Turret>();
+			//turrets.add(new Turret(new Vector2f(0,0), false, 0, 0, false, bullet1, 0));
+			
 			Texture t1 = TextureLoader.getTexture("jpg",  new FileInputStream(new File("./res/PlayButtonIcon.jpg")));
 			playGame = new Icon(new Image(t1), new Vector2f( 50, 50));
+			
 			Texture tHardcoreLemon = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/hardcoreLemon.jpg")));
 			this.logo = new Icon(new Image(tHardcoreLemon), new Vector2f(400, 300));
-			//need the bullet icon loaded 
+			
+			Texture blue = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
+			blueTurretImg = new Image(blue);
+			
+			Texture red = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Red1.jpg")));
+			redTurretImg = new Image(red);
+			
+			Texture yellow = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Yellow1.jpg")));
+			yellowTurretImg = new Image(yellow);
+			
+			Texture b = TextureLoader.getTexture("png", new FileInputStream(new File("./res/Bunker.png")));
+			bunker = new Icon(new Image(b), new Vector2f( 50, 50));
+			
+			Texture bullet = TextureLoader.getTexture("png", new FileInputStream(new File("./res/Bullet.png")));
+			bullet1 = new Icon(new Image(bullet), new Vector2f(20,20));
 		}
+		
 		
 		 catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -106,7 +158,7 @@ public class Game extends BasicGame{
 	public void gameInit(GameContainer gc) {
 		//Game grid for the turrets/enemies/ etc.
 		gameGrid = new Grid(new Vector2f(40,40), new Vector2f(gc.getWidth()*2/3, gc.getHeight()*2/3), 15);
-		b =  new Bunker(20, new Vector2f(8,8), playGame);
+		b =  new Bunker(3, new Vector2f(8,8), bunker);
 		gameGrid.change(8, 8, b.getId());
 		
 		
@@ -116,11 +168,28 @@ public class Game extends BasicGame{
 		
 		//turretShop initialization
 		turretShop = new Shop(new Vector2f(gc.getWidth()/5*4-40, 40), new Vector2f(gc.getWidth()/5, gc.getHeight()*2/3));
-		for(int i = 0; i<4; i++) {
-			for(int j = 0; j<4; j++) {
+		turretShop.addIcon(0, 0, new Icon(blueTurretImg, new Vector2f(turretShop.getSize().x/turretShop.getStore().length, turretShop.getSize().y/turretShop.getStore()[0].length)));
+			blueTurret = new BlueTurret(new Vector2f(turretShop.getLoc().x+turretShop.getSize().x/turretShop.getStore().length,	turretShop.getLoc().y + turretShop.getSize().y/turretShop.getStore()[0].length), false, turretShop.getStore()[0][0]);
+		turretShop.addTurret(0, 0, blueTurret);
+		
+		turretShop.addIcon(0, 1, new Icon(yellowTurretImg, new Vector2f(turretShop.getSize().x/turretShop.getStore().length, 
+				turretShop.getSize().y/turretShop.getStore()[0].length)));
+		
+		yellowTurret = new YellowTurret(new Vector2f(turretShop.getLoc().x+turretShop.getSize().x/turretShop.getStore().length,	turretShop.getLoc().y + turretShop.getSize().y/turretShop.getStore()[0].length), false, turretShop.getStore()[0][1]);
+				turretShop.addTurret(0, 1, yellowTurret);
+		
+		
+		
+		turretShop.addIcon(0, 2, new Icon(redTurretImg, new Vector2f(turretShop.getSize().x/turretShop.getStore().length, 
+			turretShop.getSize().y/turretShop.getStore()[0].length)));
+			redTurret = new RedTurret(new Vector2f(turretShop.getLoc().x+turretShop.getSize().x/turretShop.getStore().length,	turretShop.getLoc().y + turretShop.getSize().y/turretShop.getStore()[0].length), false, turretShop.getStore()[0][2]);
+				turretShop.addTurret(0, 2, redTurret);
+		
+		/*for(int i = 0; i<turretShop.getStore().length; i++) { //This was a test setup.
+			for(int j = 0; j<turretShop.getStore()[0].length; j++) {
 				turretShop.addIcon(i, j, playGame);
 			}
-		}
+		}*/
 	}
 	
 	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
@@ -134,6 +203,11 @@ public class Game extends BasicGame{
 		}
 		//If on credit screen
 		if(currScreen == 4) {
+			//Checks to see if it should display Sage's easter egg
+			MouseHitbox sageDrawing = new MouseHitbox(new Vector2f(gc.getWidth()/2-75, gc.getHeight()/2), new Vector2f(gc.getWidth()/2+75, gc.getHeight()/2+25));
+			if(sageDrawing.isClicked(mouseX, mouseY)) {
+				creditDrawing = 1;
+			}
 			//Checks to see if it should display Marlena's easter egg
 			MouseHitbox lenaDrawing = new MouseHitbox(new Vector2f(gc.getWidth()/2-90, gc.getHeight()/2+30), new Vector2f(gc.getWidth()/2+90, gc.getHeight()/2+55));
 			if(lenaDrawing.isClicked(mouseX, mouseY)) {
@@ -157,20 +231,23 @@ public class Game extends BasicGame{
 			
 		} else if(currScreen == 1) {
 			Icon [][] shop = turretShop.getStore();
+			MouseHitbox grid = new MouseHitbox(gameGrid.getLoc(), gameGrid.getLoc().copy().add(gameGrid.getSize()));
 			Vector2f relLoc = new Vector2f(mouseX-gameGrid.getLoc().x, mouseY-gameGrid.getLoc().y);
 			//If the player clicked on the game grid, and had a turret selected
-			if(hasClicked && relLoc.x<gameGrid.getSize().x && relLoc.y<gameGrid.getSize().y) {
-				int x = (int)(relLoc.x/gameGrid.getGrid().length);
-				int y = (int)(relLoc.y/gameGrid.getGrid()[0].length);
+			if(hasClicked && grid.isClicked(mouseX, mouseY)) {
+				int x = (int)(relLoc.x/(gameGrid.getSize().x/gameGrid.getGrid().length));
+				int y = (int)(relLoc.y/(gameGrid.getSize().y/gameGrid.getGrid()[0].length));
 				//If there is nothing there, or just a ghost wall (id 2) make the id of that spot into the turret currently selected.
-				if(gameGrid.getGrid()[x][y] == 0 || gameGrid.getGrid()[x][y] == 2) {
+				if(gameGrid.getGrid()[x][y] == 0 || gameGrid.getGrid()[x][y] == 2 && !waveIncoming) {
 					gameGrid.change(x, y, clicked.getId());
-					allTurrets.add(clicked);//adds turret to arraylist of those bought
+					turrets.add(clicked);
+					int[] xy = {x,y};
+					clicked.setGridVal(xy);
 					hasClicked = false;
 				}
 			}
 			MouseHitbox dialogue = new MouseHitbox(new Vector2f(40, gc.getHeight()-250), new Vector2f(gc.getWidth()-40, gc.getHeight()-50));
-			if(dialogue.isClicked(mouseX, mouseY)) {
+			if(dialogue.isClicked(mouseX, mouseY) && storylineProgress < 9) {
 				storylineProgress++;
 			}
 			
@@ -180,8 +257,15 @@ public class Game extends BasicGame{
 					MouseHitbox clickedIcon = new MouseHitbox(tlbr[0], tlbr[1]);
 					 
 					//This sets the clicked turret as the "clicked" or selected turret for placement
-					if(clickedIcon.isClicked(mouseX, mouseY)) {
-						clicked = turretShop.getTurret(i, j);
+					if(clickedIcon.isClicked(mouseX, mouseY) && !hasClicked && money - turretShop.getTurret(i, j).getCost()>=0 && !waveIncoming) {
+						Turret data = turretShop.getTurret(i, j);
+						if(data.getId() == 5) {
+							clicked = new BlueTurret(data.getLoc(), data.canHitFlying(), data.getDesign());
+						} else if(data.getId() == 4) {
+							clicked = new YellowTurret(data.getLoc(), data.canHitFlying(), data.getDesign());
+						} else if(data.getId() == 3) {
+							clicked = new RedTurret(data.getLoc(), data.canHitFlying(), data.getDesign());
+						}
 						hasClicked = true;
 						money -= clicked.getCost();
 					}
@@ -199,12 +283,15 @@ public class Game extends BasicGame{
 	public void update(GameContainer gc, int milli) {
 		totalTime+=milli;
 		//gets input
+		this.milli = milli;
 		Input input=gc.getInput();
-				
+		mouse2X = input.getMouseX();
+		mouse2Y = input.getMouseY();
 		//records location of mouse when mouse is clicked
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			mouseX=input.getMouseX();
 			mouseY=input.getMouseY();
+			
 			
 			//TODO make this work. This would parse what locations are relevant based upon screen such as
 			//for the main menu its just the PLAY button, but in game its the shop, turrets, etc.
@@ -218,51 +305,69 @@ public class Game extends BasicGame{
 		if(currScreen == 1 && !thereCanOnlyBeONE) {
 			gameInit(gc);
 			thereCanOnlyBeONE = true;
-		}
 			
-		//Not being used, but keep this in and commented for the time being.
-		//TODO All of the wave stuffs
-		//Not sure if this is correct
-		if(level != 0)
-		{
-			tutorial(milli);
 		}
-		
-		/*if(waveIncoming) {
-			//This would return true 1 time before changing to false for each wave (init for waves)
-			if(wave.isStarting) {
+			//This checks for collision and damages enemies.
+		if(!bullets.isEmpty()) {
+			for(Bullet b: bullets) {
+				b.update(milli);
 				for(Enemy e: waveEnemies) {
-					e.setPath(gr.getPath(new Vector2f(/*SPAWN LOCATION*///), new Vector2f(/*GOAL LOCATION*/)); //A* pathfinding
-					/*startCountdown(); //This draws a "3...2...1...HERETHEYCOME!!!!" sorta thing
-					Vector2f enemyLoc= e.getLocation();//gets the location of the enemy in array conversion
-					Vector2f bunkerLoc=Bunker.getLoc();//add in hitbox for bunker
-					if(enemyLoc.getX()-bunker.getX()>20
-					for(Turret t: allTurrets ){
-						Vector 2f turretLoc=t.getLoc();//gets location of the turret in array conversion
-						int range=t.getRange();
-						int distance = (int) enemyLoc.distance(turretLoc);
-						if (distance <= range){
-							while(distance <= range){
-								t.attack(bulletIcon, e);
-								enemyLoc=e.getLocation();//should keep checking until the enemy passes out of range
-								distance=(int) enemyLoc.distance(turretLoc);
-							}
-						money+= t.getMoney();//adds money if the enemy is killed
+					if(e.getLoc().x/gameGrid.getGrid().length == b.getLocation().x/gameGrid.getGrid().length) {
+						e.setHp(e.getHp()-b.getDamage());
 					}
-					
-				
-					
 				}
 			}
+		}
+		ArrayList<Enemy> toRemove = new ArrayList<Enemy>();
+		//This would return true 1 time before changing to false for each wave (init for waves)
+		if(!waveEnemies.isEmpty())
+			
+			for(Enemy e: waveEnemies) {
+				if(!turrets.isEmpty())
+				for(Turret t: turrets ){
+					int range=t.getRange()*50;
+					Vector2f distance = new Vector2f(Math.abs(e.getLoc().x- t.getLoc().x), Math.abs(e.getLoc().y - t.getLoc().y));
+					if (distance.x <= range || distance.y <= range && t.getFiredLast() > t.getAtkSpd()/5){
+							bullets.add(t.attack(bullet1, time, e, gameGrid));
+							t.setFiredLast(0);
+							System.out.println("Hey. Work" + bullets.get(0));
+						} else {
+							t.setFiredLast(t.getFiredLast()+milli);
+							System.out.println(t.getFiredLast());
+						}
+					if(!e.getKilled() && e.getHp()<=0) {
+						money += e.getReward();//adds money if the enemy is killed
+						toRemove.add(e);
+						e.setKilled(true);
+					}
+				}
+			
+				
+				
+			}
+		
+		for(Enemy e : toRemove) {
+			waveEnemies.remove(e);
+		}
+		toRemove.clear();
+	
 			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
 			for(Enemy e: waveEnemies) {
-				
-				e.move(milli);
-				e.render();
+				if(!(e.getLoc().x<b.getLoc().x+5 && e.getLoc().y<b.getLoc().y+5 && e.getLoc().x>b.getLoc().y-5 && e.getLoc().x>b.getLoc().y+5)) {
+					e.move(new Vector2f(8*gameGrid.GRID_UNIT.x, 8*gameGrid.GRID_UNIT.y),milli);
+				} else if(e.isAlive()){
+					e.setHp(0);
+					b.setHp(b.getHp()-1);
+				}
 			}
-		} */
+		if(waveEnemies.isEmpty() && storylineProgress == 11) {
+			bullets.clear();
+			storylineProgress++;
+		}
 		
-	}
+		} 
+		
+	
 	
 	public void render(GameContainer gc, org.newdawn.slick.Graphics g) throws SlickException{
 		int centerX = gc.getWidth()/2;
@@ -298,7 +403,7 @@ public class Game extends BasicGame{
 			g.drawRect(centerX-gc.getWidth()/10, centerY+gc.getHeight()/12, gc.getWidth()/5, h);
 			
 			g.scale(logo.getSize().x/logo.getDesign().getWidth(), logo.getSize().y/logo.getDesign().getHeight());
-			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()*6/8, gc.getHeight()/18);
+			this.logo.getDesign().draw(centerX-this.logo.getSize().getX()*3/4+10, gc.getHeight()/18);
 			g.resetTransform();
 		}
 		//should check if mouse is located in the rectangle ( but IDK man)and if so, change the screen
@@ -309,9 +414,16 @@ public class Game extends BasicGame{
 			g.fillRect(0,0,gc.getWidth(),gc.getHeight());
 			gameGrid.render(g);
 			
-			//TODO FIX, THIS DOES NOT WORK (Does not scale to size
+			//TODO FIX, THIS DOES NOT WORK (Does not scale to size)
 			turretShop.render(g);
-			g.drawString("You have: $"+money+"", gc.getWidth()-200, gc.getHeight()-40);
+			if(storylineProgress == 2) {
+				g.setColor(Color.green);
+				g.drawRect(gc.getWidth()-211, gc.getHeight()-41, g.getFont().getWidth("You have: "+money)+32, g.getFont().getHeight("You have: " +money)+7);
+				g.drawRect(gc.getWidth()-210, gc.getHeight()-40, g.getFont().getWidth("You have: "+money)+30, g.getFont().getHeight("You have: " +money)+5);
+				g.setColor(Color.black);
+			}
+			g.drawString("You have: $"+money, gc.getWidth()-200, gc.getHeight()-40);
+			g.drawString("You have "+b.getHp()+" lives left!", gc.getWidth()-500, gc.getHeight()-40);
 		
 		
 		//This draws all of the turrets that are already on the board.
@@ -319,16 +431,17 @@ public class Game extends BasicGame{
 			for(int i = 0; i<gameGrid.getGrid().length; i++) {
 				for(int j = 0; j<gameGrid.getGrid()[i].length; j++) {
 					//TODO REPEAT THIS FOR ALL TURRETS ON THE GRID
+					int iPlus = i+1;
+					int jPlus = j+1;
+					//CONTAINS FIXED SOLUTION OF +5 TO CENTER IT
 					if(gameGrid.getGrid()[i][j] == 1) {
 						//Draw wall
-					} else if(gameGrid.getGrid()[i][j] == 3 /*First Turret ID*/) {
-					//	Turret t1 = new Turret(new Vector2f(i*gameGrid.getSize().x/gameGrid.getGrid().length, j*gameGrid.getSize().y/gameGrid.getGrid()[i].length),
-						//		true, 1, 3, false, playGame, 3);
-						//Draw Turret type 1
-					} else if(gameGrid.getGrid()[i][j] == 4 /*Second Turret ID*/) {
-						//Draw Turret type 2
-					} else if(gameGrid.getGrid()[i][j] == 5 /*Third Turret ID*/) {
-						//Draw Turret type 3
+					} else if(gameGrid.getGrid()[i][j] == blueTurret.getId() /*First Turret ID*/) {
+						blueTurret.draw(g, (int)(5+iPlus*gameGrid.getSize().x/gameGrid.getGrid().length), (int)(5+jPlus*gameGrid.getSize().x/gameGrid.getGrid().length));
+					} else if(gameGrid.getGrid()[i][j] == redTurret.getId() /*Second Turret ID*/) {
+						redTurret.draw(g, (int)(5+iPlus*gameGrid.getSize().x/gameGrid.getGrid().length), (int)(5+jPlus*gameGrid.getSize().x/gameGrid.getGrid().length));
+					} else if(gameGrid.getGrid()[i][j] == yellowTurret.getId() /*Third Turret ID*/) {
+						yellowTurret.draw(g, (int)(5+iPlus*gameGrid.getSize().x/gameGrid.getGrid().length), (int)(5+jPlus*gameGrid.getSize().x/gameGrid.getGrid().length));
 					} else if(gameGrid.getGrid()[i][j] == 6 /*Fourth Turret ID*/) {
 						//Draw Turret type 4
 					} else if(gameGrid.getGrid()[i][j] == 7 /*Fifth Turret ID*/) {
@@ -337,18 +450,59 @@ public class Game extends BasicGame{
 						//Draw Turret type 6
 					} else if(gameGrid.getGrid()[i][j] == b.getId() /*Bunker ID*/) {
 						//This draws the bunker, ID = 100, This then draws it in the dead center of the map
-						b.getDesign().getDesign().draw(gameGrid.getLoc().x+(i-1)*gameGrid.getSize().x/gameGrid.getGrid().length,
-														gameGrid.getLoc().y + (j-1)*gameGrid.getSize().y/gameGrid.getGrid()[i].length);
+						b.getDesign().getDesign().draw(5+gameGrid.getLoc().x+(i-1)*gameGrid.getSize().x/gameGrid.getGrid().length,
+														5+gameGrid.getLoc().y + (j-1)*gameGrid.getSize().y/gameGrid.getGrid()[i].length);
 					}	//.............. etc.
 				}
 			}
 			
 			g.drawRect(40, gc.getHeight()-250, gc.getWidth()-80, 200);
 			//TODO add tutorial text in DialogueCollection.getDialogue(storylineProgress);
-			makeItFit(DialogueCollection.getDialogue(storylineProgress), 50, gc.getHeight()-240, gc.getWidth()-100, g);
-		
+			if(storylineProgress<=DialogueCollection.getTutorialCutOff())
+				makeItFit(DialogueCollection.getDialogue(storylineProgress), 70, gc.getHeight()-230, gc.getWidth()-100, g);
+			if(storylineProgress==DialogueCollection.getTutorialCutOff()+1){
+				//TODO do the wave stuff.
+			}
+			try {
+			if(storylineProgress == 9) {
+				ArrayList<Enemy> please = LevelOne.levelOne(milli);
+				
+				for(int i = 0; i<waveCounter; i++) {
+					waveEnemies.add(please.get(i));
+					System.out.println(waveCounter);
+				}
+				waveIncoming = true;
+				storylineProgress++;
+				if(waveCounter<please.size())
+					waveCounter++;
+			} else if(storylineProgress == 10){
+				if(waveIncoming) {
+					makeItFit("Good Luck! They are coming from the top left corner. Kill them or die!", 70, gc.getHeight()-230, gc.getWidth()-100, g);
+				}
+			}
+			 else if(storylineProgress == 11){
+				 makeItFit("Congratulations you beat the Tutorial Level!", 70, gc.getHeight()-230, gc.getWidth()-100, g);
+				waveIncoming = false;
+			}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//Potential to add a bunch of random quotes and stuff, just follow the model above. Plenty of humor space.
+			if(!bullets.isEmpty()) {
+				for(Bullet b: bullets) {
+					b.render(gc, g);
+				}
+			}
+			
+			for(Enemy e: waveEnemies) {
+				if(!e.getLoc().equals(b.getLoc())) {
+					e.render(g);
+				}
+			}
+			
 			if(hasClicked) {
-				clicked.getDesign().getDesign().draw(mouseX, mouseY);
+				clicked.getDesign().getDesign().draw(mouse2X, mouse2Y);
 			}
 			
 		}
@@ -364,7 +518,9 @@ public class Game extends BasicGame{
 			g.drawString("Marlena Rehder,", gc.getWidth()/2-90, gc.getHeight()/2+30);
 			g.drawString("And Jackson Mills!", gc.getWidth()/2 - 100, gc.getHeight()/2+60);
 			g.drawString("June, 2016", gc.getWidth()/2 - 65, gc.getHeight()/2 + 200);
-			if(creditDrawing == 2) {
+			if(creditDrawing == 1) {
+				DrawingCollection.sageDrawing(g);
+			} else if(creditDrawing == 2) {
 					DrawingCollection.lenaDrawing(g);
 			} else if(creditDrawing == 3) {
 				try {
@@ -396,6 +552,16 @@ public class Game extends BasicGame{
 		int totalLength = 0;
 		while(scan.hasNext()) {
 			String nextWord = scan.next()+" ";
+			if(nextWord.equals("Red ")) {
+				g.setColor(Color.red);
+			} else if(nextWord.equals("Blue ")) {
+				g.setColor(Color.blue);
+			} else if(nextWord.equals("Yellow ")) {
+				g.setColor(Color.yellow);
+			} else {
+				g.setColor(Color.black);
+			}
+			
 			int wLength = g.getFont().getWidth(nextWord);
 			if(totalLength+wLength<w) {
 				totalLength+=wLength;
@@ -407,54 +573,6 @@ public class Game extends BasicGame{
 		}
 		scan.close();
 	}
-	
-	//Not sure if this is correct
-	public void tutorial(milli)
-	{
-    //Does this need to be made a method instead that ccalls milli as a parameter in order to move every second?
-    //getpath uses grid locations, not pixel locations
-    //Does Vector2f use grid locations or pixel locations?
-    Vector2f startingLoc = new Vector2f(0, 8);
-    Vector2f endingLoc = new Vector2f(8, 8);
-    ArrayList<Waypoint> locs = new ArrayList<Waypoint>();
-    
-    Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.jpg")));
-    Vector2f size = new Vector2f(1, 1);
-    Icon img = new Icon(new Image(Elfy), size);
-    Vector2f loc = startingLoc;
-    Vector2f vel = new Vector2f(0, 0);
-   
-    
-    Waypoint way = gr.getPath(startingLoc, endingLoc);
-    
-    //Stores all the waypoints in the path in an arraylist
-    while(way.hasParent())
-    {
-    	Waypoint parent = way.getParent();
-    	locs.add(parent);
-    	way = parent;
-    }
-    
-    int count = 0;
-    int length = locs.size();
-    
-    Vector2f wayloc = locs.get(i).getLoc();
-    //Do I replace gr.getGrid().length with gr.getGrid().width for y...?
-    loc = new Vector2f((loc.x + wayloc.x * gr.getSize().x/gr.getGrid().length),(loc.y + wayloc.y * gr.getSize().y/gr.getGrid().length));
-    loc = loc.scale(milli/1000);
-    
-    //Moves enemy to the closest waypoint 
-    //Apparently I don't need this?
-    /*
-    for(int i = length; i = 0; i--)
-    {
-        Enemy e = new HouseElf(loc, vel, size, img);
-        Vector2f wayloc = locs.get(i).getLoc();
-        loc = e.getDirection(loc, wayloc);
-        e.render();
-    }
-    */
-}
 	
 	public static void main(String[] args) {
 		try{
