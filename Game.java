@@ -88,6 +88,8 @@ public class Game extends BasicGame{
 	
 	private Turret yellowTurret;
 	
+	private boolean gameOver;
+	
 	private int mouse2X;
 	
 	private int mouse2Y;
@@ -100,7 +102,7 @@ public class Game extends BasicGame{
 	
 	private int time;
 	
-	private int waveCounter = 1;
+	public static int waveCounter;
 	
 	public Game(String name) {
 		super(name);
@@ -116,6 +118,8 @@ public class Game extends BasicGame{
 		currScreen = 0;
 		money = 200;
 		waveIncoming = false;
+		waveCounter = 0;
+		gameOver = false;
 		
 		
 		try {
@@ -195,9 +199,9 @@ public class Game extends BasicGame{
 	public void mouseEvents(int mouseX, int mouseY, GameContainer gc) {
 		MouseHitbox credits = new MouseHitbox(new Vector2f(40, gc.getHeight()-40), new Vector2f(125, gc.getHeight()-10));
 		MouseHitbox credits2 = new MouseHitbox(new Vector2f(40, gc.getHeight()-40), new Vector2f(170, gc.getHeight()-10));
-		if(credits.isClicked(mouseX, mouseY) && currScreen == 0) {
+		if(credits.isClicked(mouseX, mouseY) && (currScreen == 0 || currScreen == 3)) {
 			currScreen = 4;
-		} else if(credits2.isClicked(mouseX, mouseY) && currScreen != 0) {
+		} else if(credits2.isClicked(mouseX, mouseY) && currScreen != 0 && !gameOver) {
 			currScreen = 0;
 			creditDrawing = 0;
 		}
@@ -330,10 +334,6 @@ public class Game extends BasicGame{
 					if (distance.x <= range || distance.y <= range && t.getFiredLast() > t.getAtkSpd()/5){
 							bullets.add(t.attack(bullet1, time, e, gameGrid));
 							t.setFiredLast(0);
-							System.out.println("Hey. Work" + bullets.get(0));
-						} else {
-							t.setFiredLast(t.getFiredLast()+milli);
-							System.out.println(t.getFiredLast());
 						}
 					if(!e.getKilled() && e.getHp()<=0) {
 						money += e.getReward();//adds money if the enemy is killed
@@ -345,25 +345,36 @@ public class Game extends BasicGame{
 				
 				
 			}
-		
-		for(Enemy e : toRemove) {
-			waveEnemies.remove(e);
+		for(Turret t: turrets) {
+			t.setFiredLast(t.getFiredLast()+milli);
 		}
-		toRemove.clear();
+		
+		
 	
 			//For each enemy make them move/dance/shuffle/doabarrelroll along the path
 			for(Enemy e: waveEnemies) {
 				if(!(e.getLoc().x<b.getLoc().x+5 && e.getLoc().y<b.getLoc().y+5 && e.getLoc().x>b.getLoc().y-5 && e.getLoc().x>b.getLoc().y+5)) {
-					e.move(new Vector2f(8*gameGrid.GRID_UNIT.x, 8*gameGrid.GRID_UNIT.y),milli);
+					int dmg = e.move(new Vector2f(8*gameGrid.GRID_UNIT.x, 8*gameGrid.GRID_UNIT.y),milli);
+					if(e.getDamaged() && dmg != 0) {
+						//TODO add scaling damage to bunker
+						b.setHp(b.getHp()-1);
+						e.setDamaged(false);
+						toRemove.add(e);
+					}
 				} else if(e.isAlive()){
 					e.setHp(0);
 					b.setHp(b.getHp()-1);
 				}
 			}
-		if(waveEnemies.isEmpty() && storylineProgress == 11) {
-			bullets.clear();
-			storylineProgress++;
-		}
+			for(Enemy e : toRemove) {
+				waveEnemies.remove(e);
+			}
+			toRemove.clear();
+		if(currScreen == 1 && (b.getHp() <=0)) {
+				currScreen = 3;
+				gameOver = true;
+			}
+	
 		
 		} 
 		
@@ -465,19 +476,26 @@ public class Game extends BasicGame{
 			}
 			try {
 			if(storylineProgress == 9) {
-				ArrayList<Enemy> please = LevelOne.levelOne(milli);
 				
-				for(int i = 0; i<waveCounter; i++) {
-					waveEnemies.add(please.get(i));
-					System.out.println(waveCounter);
-				}
 				waveIncoming = true;
 				storylineProgress++;
-				if(waveCounter<please.size())
-					waveCounter++;
+				
 			} else if(storylineProgress == 10){
+				ArrayList<Enemy> please = LevelOne.levelOne(milli);
+				
+				if(waveCounter<please.size()*10 && waveCounter%10 == 0) {
+					waveEnemies.add(please.get(waveCounter/10));
+					System.out.println(waveCounter);
+					
+				} 
+					waveCounter++;
+				
 				if(waveIncoming) {
 					makeItFit("Good Luck! They are coming from the top left corner. Kill them or die!", 70, gc.getHeight()-230, gc.getWidth()-100, g);
+				}
+				if(waveEnemies.isEmpty()) {
+					bullets.clear();
+					storylineProgress++;
 				}
 			}
 			 else if(storylineProgress == 11){
@@ -506,7 +524,10 @@ public class Game extends BasicGame{
 			}
 			
 		}
-		
+		if(currScreen == 3) {
+			g.setColor(Color.black);
+			g.drawString("GAME OVER... CLICK BELOW TO SEE CREDITS", gc.getWidth()/2-g.getFont().getWidth("GAME OVER... CLICK BELOW TO SEE CREDITS")/2, gc.getHeight()/2-20);
+		}
 		//Credit page layout
 		if(currScreen == 4) {
 			//TODO ADD LINKS TO THE DRAWING PROJECT UPON CLICKING EACH PERSON'S NAME
@@ -534,11 +555,11 @@ public class Game extends BasicGame{
 		}
 		
 		//Links to the main menu and credit screens
-		if(currScreen == 0) {
+		if(currScreen == 0 || currScreen == 3) {
 			g.setColor(Color.black);
 			g.drawRect(40, gc.getHeight()-40, 85,  30);
 			g.drawString("Credits", 45, gc.getHeight()-40);
-		} else {
+		} else if(!gameOver){
 			g.setColor(Color.black);
 			g.drawRect(40, gc.getHeight() - 40, 130, 30);
 			g.drawString("Main Menu", 45, gc.getHeight()-40);
