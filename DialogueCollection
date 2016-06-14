@@ -1,8 +1,15 @@
 package main;
 
 public class DialogueCollection {
+	//This is where the tutorial text stops returning so that the code can avoid repeating it when random tips happen
+	private static int tutorialCutOff = 8;
+	
 	DialogueCollection() {
 		
+	}
+	
+	public static int getTutorialCutOff() {
+		return tutorialCutOff;
 	}
 	
 	public static String getDialogue(int num) {
