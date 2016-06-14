@@ -19,19 +19,49 @@ public class Shop {
   //makes the actual buying thing
   private Icon[][] store;
   
+  private Turret[][] storeTurrets;
+  
   
   public Shop (Vector2f l, Vector2f s){
 	size = s;
 	location = l;
 	//I assume the shop will be comprised of two basic turrets, then three colours, then the two additional 
 	//upgrades per color
-	store = new Icon [4][4];//changed to acclimate grid
+	storeTurrets = new Turret[1][3];
+	store = new Icon [1][3];//changed to acclimate grid
   } 
+  
+  public Icon[][] getStore() {
+	  return store;
+  }
+  
+  public void addTurret(int x, int y, Turret t) {
+	  storeTurrets[x][y] = t;
+  }
+  
+  public Turret getTurret(int x, int y) {
+	  return storeTurrets[x][y];
+  }
   
   public void addIcon(int r, int c, Icon i) {
 	  store[r][c] = i;
   }
+  
+  public Vector2f getSize() {
+	  return size;
+  }
+  
+  public Vector2f getLoc() {
+	  return location;
+  }
 	
+  public Vector2f[] iconHitbox(int x, int y) {
+	  Vector2f[] tlbr= new Vector2f[2];
+	  tlbr[0] = new Vector2f(location.x + x*size.x/store.length, location.y+y*size.y/store[0].length);
+	  tlbr[1] = new Vector2f(tlbr[0].x+size.x/store.length, tlbr[0].y+size.y/store[0].length);
+	  return tlbr;
+  }
+  
   public void render (Graphics g){
 	Grid shopGrid = new Grid (location, size, store.length, store[0].length);
 	shopGrid.render(g);
@@ -39,9 +69,14 @@ public class Shop {
 		for(int j = 0; j<store[0].length; j++) {
 			//This prints out the icon image inside the grid boxes (Needs testing)
 			if(!store[i][j].getDesign().equals(null)) {
-				g.scale(store[i][j].getSize().x/store.length, store[i][j].getSize().y/store[i].length);
-				store[i][j].getDesign().draw(location.x+i*shopGrid.getSize().x/shopGrid.getGrid().length
-										, location.y+j*shopGrid.getSize().y/shopGrid.getGrid()[0].length);
+				//Changing size breaks it, TODO Make that not happen!
+				//g.scale(store[i][j].getSize().x/store.length, store[i][j].getSize().y/store[i].length);
+				g.translate(location.x+i*shopGrid.getSize().x/shopGrid.getGrid().length, location.y+j*shopGrid.getSize().y/shopGrid.getGrid()[0].length);
+				store[i][j].getDesign().draw(0, 0);
+				g.translate(5, size.x/shopGrid.getGrid().length/2);
+				//TODO add turret test data to test this.
+				//g.drawString("$"+storeTurrets[i][j].getCost(), 0, 0);
+				g.resetTransform();
 										
 			}
 		}
