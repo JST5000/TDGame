@@ -19,6 +19,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import grid.Waypoint;
+import main.Game;
+
 import java.util.*;
 import playerObjects.*;
 
@@ -26,38 +28,55 @@ public class LevelOne {
 static int i = 0;
 static float x = 0;
 static float y = 0;
+static float tot = 0;
+static Enemy e;
+static ArrayList<Enemy> es;
+static Enemy[] wave = new Enemy[30];
 public static ArrayList<Enemy> levelOne(int milli) throws FileNotFoundException, IOException
 {
-    Vector2f startingLoc = new Vector2f(40, 40);
-    int tot = 0;
+    Vector2f startingLoc = new Vector2f(46, 46);
     tot += milli;
+    Vector2f vel = new Vector2f(38, 38);
+    if(i == 0) {
+    	Texture Elfy = TextureLoader.getTexture("png", new FileInputStream(new File("./res/HouseElf.png")));
+    	Vector2f size = new Vector2f(1, 1);
+    	Icon img = new Icon(new Image(Elfy), size);
+    	Vector2f loc = startingLoc;
+    	for(int j = 0; j< wave.length; j++) {
+    		wave[j] = new HouseElf(loc, vel, size, img);
+    	}
+    	
+    }
+    ArrayList<Enemy> es = new ArrayList<Enemy>();
+    for(Enemy e: wave) {
     
-    Texture Elfy = TextureLoader.getTexture("jpg", new FileInputStream(new File("./res/Blue1.jpg")));
-    Vector2f size = new Vector2f(1, 1);
-    Icon img = new Icon(new Image(Elfy), size);
-    Vector2f loc = startingLoc;
-    Vector2f vel = new Vector2f(0, 0);
-    Enemy e = new HouseElf(loc, vel, size, img);
-    while(tot > 1)
+	es.add(e);
+    }
+ /*   while(tot > 250)
     { tot = 0;
       if((i %= 2) == 0)
       {
-          y += 1;
+          //y += 1; 
+    	  x = 0;
+    	  y = 4;
+    	  i++;
       }
       else
       {
-        x += 1;
+        //x += 1;
+    	  x = 4;
+    	  y = 0;
+    	  i++;
       }
     }
-   i++;
-   e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
+    vel = new Vector2f(x*38, y*38);
+    
+    e.setLoc(e.getLoc().add(vel.scale((float)milli/1000))); */
+   //e.setLoc(new Vector2f((e.getLoc().x + x*5), e.getLoc().y+y*5));
    
-   if((e.getLoc().x <= 290) || (e.getLoc().y <= 290))
-   {
-       e.render();
-   }
+
    //What does this do?
-   ArrayList<Enemy> es = new ArrayList<Enemy>();
+    
    return es;
   }
 }
