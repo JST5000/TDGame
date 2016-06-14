@@ -12,19 +12,26 @@ public class Bullet {
 	private Vector2f location;//where the bullet is 
 	private int lifespan;//how long the bullet has been alive, to avoid rendering it too long
 	public static int MAX_LIFETIME;//cap on how long the bullet could possibly exist
+	public static int MAX_DISTANCE;
 	private Vector2f origin;//where the turret is; where the bullet originates
 	boolean hit;//whether the bullet has hit anything
 	boolean aoe;//the aoe of the bullet
 	
-	Bullet(Icon b, int atk, Enemy e, Vector2f location) {//add enemy as a parameter to lock onto, adds location (which should be the turret)
+	public Bullet() {
+		alive = false;
+	}
+	
+	public Bullet(Icon b, int atk, Enemy e, Vector2f location) {//add enemy as a parameter to lock onto, adds location (which should be the turret)
 		bullet = b;
 		this.atk = atk;
 		this.e=e;
 		alive=true;
 		this.location=location;
 		lifespan=0;
-		MAX_LIFETIME=3000;
+		MAX_LIFETIME=1000;
+		MAX_DISTANCE=400;
 		hit=false;
+		origin = location;
 	}
 	
 	public void draw(Graphics g, Vector2f locationP, int angle) {
@@ -48,6 +55,8 @@ public class Bullet {
 		if(lifespan>MAX_LIFETIME){
 			alive=false;
 		}
+		if(Math.abs(location.x-origin.x)>MAX_DISTANCE || Math.abs(location.y-origin.y)>MAX_DISTANCE)
+			alive = false;
 		if(alive){
 			//moves the bullet
 			Vector2f eLocation=e.getLoc();
@@ -56,8 +65,12 @@ public class Bullet {
 			int oX=(int)location.getX();
 			int oY=(int)location.getY();
 			Vector2f whereDoIGo=new Vector2f(eX-oX,eY-oY);//should create a vector betwen the origin and the enemy. 
-			location=new Vector2f(whereDoIGo.getX() +10, whereDoIGo.getY() +10);//adds speed to the new direction vector 
-			location = location.add(whereDoIGo.scale((float)milli/1000));
+			if(Math.abs(whereDoIGo.x) < 10 || Math.abs(whereDoIGo.y) < 10 ) {
+				e.setHp(e.getHp()-atk);
+				alive = false;
+			}
+			whereDoIGo = new Vector2f(whereDoIGo.getX()*2 +20, whereDoIGo.getY()*2 +20);//adds speed to the new direction vector 
+			location = new Vector2f(location.x+whereDoIGo.x*milli/1000, location.y+whereDoIGo.y*milli/1000);
 			lifespan+=milli;
 			
 			//checks for collisions
@@ -87,8 +100,8 @@ public class Bullet {
 	}
 	
 	public void render(GameContainer gc, Graphics g){
+		if(alive)
 		g.drawImage(bullet.getDesign(), location.getX(), location.getY());
-		
 		
 	}
 	
