@@ -1,44 +1,48 @@
 package playerObjects;
 
 import org.newdawn.slick.Graphics;
-import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.TextureLoader;
+
+import grid.Grid;
+
 
 public class Turret {
-	
-	private Vector2f location; //real location in pixels THEY'RE A MAN'S UNIT OF MEASUREMENT
 	
 	//A stands for location relative to array
 	private Vector2f locationA;
 	
 	//This determines if the turret can hit flying units
-	private boolean canHitFlying;
+	protected boolean canHitFlying;
 	
 	//This determines the damage of each attack by the turret
-	private int atk;
+	protected int atk;
 	
 	//This determines the point at which the turret can attack
-	private int range;
+	protected int range;
 	
 	//This is the time in seconds it takes before a turret can fire again.
-	private float atkSpd;
+	protected float atkSpd;
 	
 	//This number gives the last time it was fired
 	private float firedLast;
 	
-	private boolean hit;//this shows whether the bullet hits
-	
 	//This shows if the unit hits multiple enemies or just one
-	private boolean aoe;
+	protected boolean aoe;
 	
-	private int money;//amount of money gained from attacks
+	protected int id;
 	
-	private int id;//id number
+	protected int level;
+	
+	protected int cost;
+	
+	private int[] gridVal;
 	
 	//This is the image that represents the turret for in game
 	Icon design;
 	
 	//Sets the fields to the given values
-	Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i, int atkSpd) {//atkSpd in milli 
+	public Turret(Vector2f l, boolean canFly, int a, int r, boolean aoe, Icon i, int atkSpd) {
 		locationA = l;
 		canHitFlying = canFly;
 		atk = a;
@@ -47,16 +51,20 @@ public class Turret {
 		design = i;
 		firedLast = 0;
 		this.atkSpd=atkSpd;
-		location= new Vector2f( (gr.getSize().x /gr.getGrid().length), (gt.getSize().y/gr.getGrid()[0].length));
-		money=0;
-	
-      }
+		id = 1;
+		cost = 20;
+		level = 1;
+		firedLast = atkSpd;
+	}
 	
 	//This section returns fields
 	public Icon getDesign() {
 	  	return design;
 	}
 	 
+	public int getCost() {
+		return cost;
+	}
 	
 	public Vector2f getLoc() {
 		return locationA;
@@ -74,49 +82,63 @@ public class Turret {
 		return atk;
 	}
 	
-	public Vector2f getRealLoc(){
-		return location;
+	public int getId() {
+		return id;
+	}
+	
+	public int getFiredLast() {
+		return (int) firedLast;
+	}
+	
+	public void setFiredLast(int i) {
+		firedLast = i;
+	}
+	
+	
+	
+	public int[] getGridVal() {
+		return gridVal;
 	}
 	
 	public boolean canHitFlying() {
 		return canHitFlying;
 	}
-	
-	public int getMoney(){
-		int money2=money;
-		money=0;//clears money so you don't get rewarded increasing amounts of money per kill
-		return money2();
-	}
 	//End of field return section
 	//draw the turret on the screen with input
 	public void draw(Graphics g, int x, int y){
-		g.drawImage(Turret.getDesign(), x, y);
+		g.drawImage(getDesign().getDesign(), x, y);
 	}
 	
-	public void attack(Icon bullet, Enemy e) {
+	public void setGridVal(int[] i) {
+		gridVal = i;
+	}
+	
+	public Bullet attack(Icon bullet, int milli, Enemy e, Grid gr) {
 		//TODO: Copy Enemy.java from computer at school
-		float time = System.currentTimeMillis();
-		if(time-firedLast > atkSpd) { 
+		firedLast += milli;
+			Bullet b = new Bullet(bullet, atk, e, new Vector2f(gridVal[0]*gr.GRID_UNIT.x+gr.getLoc().x+15, gridVal[1]*gr.GRID_UNIT.y + gr.getLoc().y+15));
+			return b;
+
+		
 			//This makes a bullet that targets an enemy trying to kill them by staying locked
 			//Bullets explode on collision normally regardless of target
-			Bullet b = new Bullet(bullet, atk, e, location);//gives the bullet an origin in pixels
-			//TODO Make the bullet follow the target (Enemy e)
-			boolean hit= b.underFire();//checks if the bullet hit anything
-			if(hit){
-				e.hit(b.getDamage);//reduces the enemy hp
-				if(! (e.isAlive()) ){//checks if the enemy is dead
-					money=e.getMoney();
-				}
-			}
-			b.update(time);
+		//	new Icon(new Image(TextureLoader.getTexture("jpg", new FileInputStream("./res/Bullet.png"))))
 			
+			//TODO Make the bullet follow the target (Enemy e)
+			
+		
 			
 			//Fired last ensures the atkSpd gates the turret's damage
-			firedLast = time;
-		}
+			
+			
+		
 		
 			
 		
+	}
+
+	public int getAtkSpd() {
+		return (int)atkSpd;
 	}
 
 }
