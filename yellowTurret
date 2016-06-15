@@ -7,9 +7,10 @@ import playerObjects.Turret;
 
 public class YellowTurret extends Turret{
 		
-	public YellowTurret (Vector2f l, boolean canFly, Icon i, int atkSpd){
+	public YellowTurret (Vector2f l, boolean canFly, Icon i){
 	    super (l, canFly, 2, 2, false, i, 1000);
 	    cost = 30;
+	    id = 4;
 	}
 	
 	//Returns cost to upgrade
