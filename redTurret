@@ -7,8 +7,9 @@ import playerObjects.Turret;
 
 public class RedTurret extends Turret{
 		
-	public RedTurret (Vector2f l, boolean canFly, Icon i, int atkSpd){
+	public RedTurret (Vector2f l, boolean canFly, Icon i){
 	    super(l, canFly, 2, 2, false, i, 1000);
+	    id = 3;
 	}
 	
 	public int upgrade() {
